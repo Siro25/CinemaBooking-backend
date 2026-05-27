@@ -20,10 +20,10 @@ public class Seat {
     Long id;
 
     @Column(name = "seat_row", nullable = false, length = 10)
-    String row; // Ví dụ: "A", "B"
+    String row;
 
     @Column(name = "seat_number", nullable = false)
-    Integer number; // Ví dụ: 1, 2, 3
+    Integer number;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
