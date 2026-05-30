@@ -6,10 +6,15 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "movies")
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,7 +30,7 @@ public class Movie {
     @Column(nullable = false)
     String title;
 
-    @Column(columnDefinition = "MEDIUMTEXT")
+    @Column(columnDefinition = "TEXT")
     String description;
 
     @Column(nullable = false)
@@ -45,16 +50,16 @@ public class Movie {
     @Column(nullable = false)
     MovieStatus status;
 
+    @CreatedDate
     @Column(name = "created_at", updatable = false)
     LocalDateTime createdAt;
 
+    @LastModifiedDate
     @Column(name = "updated_at")
     LocalDateTime updatedAt;
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
         if (status == null) {
             status = MovieStatus.COMING_SOON; // Mặc định là sắp chiếu
         }

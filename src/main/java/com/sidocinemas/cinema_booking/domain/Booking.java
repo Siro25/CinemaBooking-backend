@@ -6,12 +6,17 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "bookings")
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -39,9 +44,11 @@ public class Booking {
     @Column(name = "total_price", nullable = false)
     BigDecimal totalPrice;
 
+    @CreatedDate
     @Column(name = "created_at", updatable = false)
     LocalDateTime createdAt;
 
+    @LastModifiedDate
     @Column(name = "updated_at")
     LocalDateTime updatedAt;
 
@@ -51,8 +58,6 @@ public class Booking {
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
         if (status == null) {
             status = BookingStatus.HOLD;
         }

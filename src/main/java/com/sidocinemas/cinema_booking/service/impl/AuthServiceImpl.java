@@ -1,5 +1,6 @@
 package com.sidocinemas.cinema_booking.service.impl;
 
+import com.sidocinemas.cinema_booking.configuration.JwtTokenProvider;
 import com.sidocinemas.cinema_booking.domain.User;
 import com.sidocinemas.cinema_booking.dto.request.LoginRequest;
 import com.sidocinemas.cinema_booking.dto.request.RegisterRequest;
@@ -13,6 +14,7 @@ import com.sidocinemas.cinema_booking.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +22,10 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
+    @Transactional(readOnly = true)
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
@@ -34,9 +38,7 @@ public class AuthServiceImpl implements AuthService {
             throw new AppException(ErrorCode.USER_NOT_ACTIVE);
         }
 
-        // TODO: Triển khai logic tạo JWT Token thực tế ở đây, hiện tại trả về chuỗi
-        // mock.
-        String token = "mock-jwt-token-" + user.getId();
+        String token = jwtTokenProvider.generateToken(user);
 
         return AuthResponse.builder()
                 .token(token)
@@ -46,6 +48,7 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
+    @Transactional
     @Override
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
@@ -62,7 +65,7 @@ public class AuthServiceImpl implements AuthService {
 
         user = userRepository.save(user);
 
-        String token = "mock-jwt-token-" + user.getId();
+        String token = jwtTokenProvider.generateToken(user);
 
         return AuthResponse.builder()
                 .token(token)
