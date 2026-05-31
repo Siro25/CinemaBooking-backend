@@ -12,7 +12,9 @@ public enum ErrorCode {
     UNAUTHENTICATED(1004, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1005, "Bạn không có quyền truy cập", HttpStatus.FORBIDDEN),
     USER_NOT_ACTIVE(1006, "Tài khoản của bạn đã bị khóa hoặc chưa kích hoạt", HttpStatus.FORBIDDEN),
-    INVALID_PASSWORD(1007, "Email hoặc mật khẩu không chính xác", HttpStatus.BAD_REQUEST)
+    INVALID_PASSWORD(1007, "Email hoặc mật khẩu không chính xác", HttpStatus.BAD_REQUEST),
+    USER_NOT_FOUND(1008, "Không tìm thấy người dùng", HttpStatus.NOT_FOUND),
+    MOVIE_NOT_FOUND(1009, "Không tìm thấy phim", HttpStatus.NOT_FOUND)
     ;
 
     private final int code;
