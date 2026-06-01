@@ -7,8 +7,12 @@ import java.util.List;
 
 public interface CinemaService {
     CinemaResponse createCinema(CinemaRequest request);
+
     CinemaResponse updateCinema(Long id, CinemaRequest request);
+
     void deleteCinema(Long id);
+
     CinemaResponse getCinemaById(Long id);
+
     List<CinemaResponse> getAllCinemas();
 }

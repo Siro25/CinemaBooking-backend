@@ -30,7 +30,8 @@ public class CinemaController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CinemaResponse> updateCinema(@PathVariable Long id, @RequestBody @Valid CinemaRequest request) {
+    public ResponseEntity<CinemaResponse> updateCinema(@PathVariable Long id,
+            @RequestBody @Valid CinemaRequest request) {
         return ResponseEntity.ok(cinemaService.updateCinema(id, request));
     }
 
