@@ -16,7 +16,13 @@ public enum ErrorCode {
     USER_NOT_FOUND(1008, "Không tìm thấy người dùng", HttpStatus.NOT_FOUND),
     MOVIE_NOT_FOUND(1009, "Không tìm thấy phim", HttpStatus.NOT_FOUND),
     CINEMA_NOT_FOUND(1010, "Không tìm thấy rạp", HttpStatus.NOT_FOUND),
-    ROOM_NOT_FOUND(1011, "Không tìm thấy phòng chiếu", HttpStatus.NOT_FOUND);
+    ROOM_NOT_FOUND(1011, "Không tìm thấy phòng chiếu", HttpStatus.NOT_FOUND),
+    PAYMENT_NOT_FOUND(1012, "Không tìm thấy giao dịch thanh toán", HttpStatus.NOT_FOUND),
+    BOOKING_NOT_FOUND(1013, "Không tìm thấy đặt vé", HttpStatus.NOT_FOUND),
+    PAYMENT_ALREADY_EXISTS_FOR_BOOKING(1014, "Giao dịch thanh toán cho vé này đã tồn tại", HttpStatus.BAD_REQUEST),
+    SHOWTIME_NOT_FOUND(1015, "Không tìm thấy suất chiếu", HttpStatus.NOT_FOUND),
+    SHOWTIME_OVERLAP(1016, "Suất chiếu bị trùng lịch với suất chiếu khác trong cùng phòng", HttpStatus.CONFLICT),
+    SHOWTIME_END_BEFORE_START(1017, "Thời gian kết thúc phải sau thời gian bắt đầu", HttpStatus.BAD_REQUEST);
 
     private final int code;
     private final String message;
