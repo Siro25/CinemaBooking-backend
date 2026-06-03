@@ -22,7 +22,13 @@ public enum ErrorCode {
     PAYMENT_ALREADY_EXISTS_FOR_BOOKING(1014, "Giao dịch thanh toán cho vé này đã tồn tại", HttpStatus.BAD_REQUEST),
     SHOWTIME_NOT_FOUND(1015, "Không tìm thấy suất chiếu", HttpStatus.NOT_FOUND),
     SHOWTIME_OVERLAP(1016, "Suất chiếu bị trùng lịch với suất chiếu khác trong cùng phòng", HttpStatus.CONFLICT),
-    SHOWTIME_END_BEFORE_START(1017, "Thời gian kết thúc phải sau thời gian bắt đầu", HttpStatus.BAD_REQUEST);
+    SHOWTIME_END_BEFORE_START(1017, "Thời gian kết thúc phải sau thời gian bắt đầu", HttpStatus.BAD_REQUEST),
+    SEAT_NOT_FOUND(1018, "Không tìm thấy ghế", HttpStatus.NOT_FOUND),
+    SEAT_ALREADY_BOOKED(1019, "Một hoặc nhiều ghế đã được đặt", HttpStatus.CONFLICT),
+    SEAT_NOT_BELONG_TO_ROOM(1020, "Ghế không thuộc phòng chiếu của suất chiếu này", HttpStatus.BAD_REQUEST),
+    BOOKING_CANNOT_CANCEL(1021, "Chỉ có thể huỷ đặt vé ở trạng thái HOLD hoặc CONFIRMED", HttpStatus.BAD_REQUEST),
+    BOOKING_ALREADY_CONFIRMED(1022, "Đặt vé đã được xác nhận", HttpStatus.BAD_REQUEST),
+    NO_SEATS_SELECTED(1023, "Vui lòng chọn ít nhất một ghế", HttpStatus.BAD_REQUEST);
 
     private final int code;
     private final String message;
