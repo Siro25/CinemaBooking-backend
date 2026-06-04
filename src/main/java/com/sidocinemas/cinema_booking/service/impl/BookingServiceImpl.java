@@ -35,8 +35,8 @@ public class BookingServiceImpl implements BookingService {
     UserRepository userRepository;
 
     // ── Hệ số giá theo loại ghế ─────────────────────────────────────────────
-    private static final BigDecimal VIP_MULTIPLIER    = new BigDecimal("1.5");
-    private static final BigDecimal COUPLE_MULTIPLIER = new BigDecimal("2.0");
+    private static final BigDecimal VIP_TYPE = new BigDecimal("1.5");
+    private static final BigDecimal COUPLE_TYPE = new BigDecimal("2.0");
 
     @Override
     @Transactional
@@ -179,9 +179,9 @@ public class BookingServiceImpl implements BookingService {
      */
     private BigDecimal calculatePrice(BigDecimal basePrice, SeatType seatType) {
         return switch (seatType) {
-            case VIP    -> basePrice.multiply(VIP_MULTIPLIER);
-            case COUPLE -> basePrice.multiply(COUPLE_MULTIPLIER);
-            default     -> basePrice;
+            case VIP -> basePrice.multiply(VIP_TYPE);
+            case COUPLE -> basePrice.multiply(COUPLE_TYPE);
+            default -> basePrice;
         };
     }
 
@@ -192,10 +192,10 @@ public class BookingServiceImpl implements BookingService {
 
     private BookingResponse mapToResponse(Booking booking) {
         Showtime showtime = booking.getShowtime();
-        User customer    = booking.getCustomer();
-        Room room        = showtime != null ? showtime.getRoom() : null;
-        Movie movie      = showtime != null ? showtime.getMovie() : null;
-        Cinema cinema    = room     != null ? room.getCinema()    : null;
+        User customer = booking.getCustomer();
+        Room room = showtime != null ? showtime.getRoom() : null;
+        Movie movie = showtime != null ? showtime.getMovie() : null;
+        Cinema cinema = room != null ? room.getCinema() : null;
 
         List<TicketResponse> ticketResponses = booking.getTickets().stream()
                 .map(t -> {
@@ -208,6 +208,8 @@ public class BookingServiceImpl implements BookingService {
                             .seatType(seat != null ? seat.getType() : null)
                             .price(t.getPrice())
                             .qrCode(t.getQrCode())
+                            .qrCodeBase64(com.sidocinemas.cinema_booking.util.QrCodeUtil
+                                    .generateQrCodeBase64(t.getQrCode(), 250, 250))
                             .build();
                 })
                 .toList();

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -79,7 +79,7 @@ public class CinemaServiceImpl implements CinemaService {
     public List<CinemaResponse> getAllCinemas() {
         return cinemaRepository.findAll().stream()
                 .map(this::mapToResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private CinemaResponse mapToResponse(Cinema cinema) {

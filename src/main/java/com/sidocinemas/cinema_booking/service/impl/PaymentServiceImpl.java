@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -79,7 +78,7 @@ public class PaymentServiceImpl implements PaymentService {
     public List<PaymentResponse> getAllPayments() {
         return paymentRepository.findAll().stream()
                 .map(this::mapToResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private PaymentResponse mapToResponse(Payment payment) {

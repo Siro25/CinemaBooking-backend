@@ -19,5 +19,6 @@ public class TicketResponse {
     Integer seatNumber;
     SeatType seatType;
     BigDecimal price;
-    String qrCode;
+    String qrCode; // raw string UUID
+    String qrCodeBase64; // base64 encoded image
 }

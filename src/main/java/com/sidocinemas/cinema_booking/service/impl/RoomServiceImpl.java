@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -84,7 +84,7 @@ public class RoomServiceImpl implements RoomService {
         }
         return roomRepository.findByCinemaId(cinemaId).stream()
                 .map(this::mapToResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private RoomResponse mapToResponse(Room room) {

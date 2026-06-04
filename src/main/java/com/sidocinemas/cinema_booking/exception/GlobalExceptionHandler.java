@@ -11,10 +11,20 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<ApiResponse<Void>> handlingRuntimeException(Exception exception) {
+        System.err.println("Unhandled exception: " + exception.getClass().getName() + " - " + exception.getMessage());
+        exception.printStackTrace();
         ApiResponse<Void> apiResponse = new ApiResponse<>();
         apiResponse.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
         apiResponse.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
         return ResponseEntity.status(ErrorCode.UNCATEGORIZED_EXCEPTION.getStatusCode()).body(apiResponse);
+    }
+
+    @ExceptionHandler(value = org.springframework.web.servlet.resource.NoResourceFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handlingNoResourceFoundException(org.springframework.web.servlet.resource.NoResourceFoundException exception) {
+        ApiResponse<Void> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(404);
+        apiResponse.setMessage("Resource not found: " + exception.getResourcePath());
+        return ResponseEntity.status(404).body(apiResponse);
     }
 
     @ExceptionHandler(value = AppException.class)
