@@ -2,6 +2,8 @@ package com.sidocinemas.cinema_booking.service;
 
 import com.sidocinemas.cinema_booking.dto.request.BookingRequest;
 import com.sidocinemas.cinema_booking.dto.response.BookingResponse;
+import com.sidocinemas.cinema_booking.dto.response.ManagerReportResponse;
+
 import java.util.List;
 
 public interface BookingService {
@@ -22,6 +24,12 @@ public interface BookingService {
     /** Lấy lịch sử đặt vé của customer */
     List<BookingResponse> getBookingsByCustomer(Long customerId);
 
-    /** ADMIN: Lấy tất cả booking (có thể filter theo status) */
+    /** ADMIN: Lấy tất cả booking */
     List<BookingResponse> getAllBookings();
-}
+
+    /** MANAGER: Lấy tất cả booking của rạp mình quản lý */
+    List<BookingResponse> getBookingsByCinema(Long cinemaId);
+
+    /** MANAGER: Báo cáo doanh thu rạp */
+    ManagerReportResponse getManagerReport(Long cinemaId);
+}

@@ -3,6 +3,8 @@ package com.sidocinemas.cinema_booking.service.impl;
 import com.sidocinemas.cinema_booking.domain.*;
 import com.sidocinemas.cinema_booking.dto.request.BookingRequest;
 import com.sidocinemas.cinema_booking.dto.response.BookingResponse;
+import com.sidocinemas.cinema_booking.dto.response.ManagerReportResponse;
+import com.sidocinemas.cinema_booking.dto.response.MovieRevenueResponse;
 import com.sidocinemas.cinema_booking.dto.response.TicketResponse;
 import com.sidocinemas.cinema_booking.enums.BookingStatus;
 import com.sidocinemas.cinema_booking.enums.SeatType;
@@ -33,6 +35,7 @@ public class BookingServiceImpl implements BookingService {
     SeatRepository seatRepository;
     TicketRepository ticketRepository;
     UserRepository userRepository;
+    CinemaRepository cinemaRepository;
 
     // ── Hệ số giá theo loại ghế ─────────────────────────────────────────────
     private static final BigDecimal VIP_TYPE = new BigDecimal("1.5");
@@ -169,6 +172,53 @@ public class BookingServiceImpl implements BookingService {
         return bookingRepository.findAll().stream()
                 .map(this::mapToResponse)
                 .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<BookingResponse> getBookingsByCinema(Long cinemaId) {
+        if (!cinemaRepository.existsById(cinemaId)) {
+            throw new AppException(ErrorCode.CINEMA_NOT_FOUND);
+        }
+        return bookingRepository.findByCinemaIdOrderByCreatedAtDesc(cinemaId)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ManagerReportResponse getManagerReport(Long cinemaId) {
+        Cinema cinema = cinemaRepository.findById(cinemaId)
+                .orElseThrow(() -> new AppException(ErrorCode.CINEMA_NOT_FOUND));
+
+        List<Booking> allBookings = bookingRepository.findByCinemaIdOrderByCreatedAtDesc(cinemaId);
+        long confirmed = allBookings.stream().filter(b -> b.getStatus() == BookingStatus.CONFIRMED).count();
+        long cancelled = allBookings.stream().filter(b -> b.getStatus() == BookingStatus.CANCELLED).count();
+        long hold      = allBookings.stream().filter(b -> b.getStatus() == BookingStatus.HOLD).count();
+
+        BigDecimal totalRevenue = bookingRepository.sumRevenueByCinema(cinemaId);
+
+        List<MovieRevenueResponse> revenueByMovie = bookingRepository
+                .getRevenueByMovieForCinema(cinemaId)
+                .stream()
+                .map(row -> MovieRevenueResponse.builder()
+                        .movieTitle((String) row[0])
+                        .totalRevenue((BigDecimal) row[1])
+                        .totalBookings(((Number) row[2]).longValue())
+                        .build())
+                .toList();
+
+        return ManagerReportResponse.builder()
+                .cinemaId(cinema.getId())
+                .cinemaName(cinema.getName())
+                .totalRevenue(totalRevenue)
+                .totalBookings(allBookings.size())
+                .confirmedBookings(confirmed)
+                .cancelledBookings(cancelled)
+                .holdBookings(hold)
+                .revenueByMovie(revenueByMovie)
+                .build();
     }
 
     // ── Helpers ──────────────────────────────────────────────────────────────
