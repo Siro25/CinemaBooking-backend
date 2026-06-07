@@ -1,9 +1,7 @@
 package com.sidocinemas.cinema_booking.configuration;
 
-import com.sidocinemas.cinema_booking.domain.User;
-import com.sidocinemas.cinema_booking.exception.AppException;
-import com.sidocinemas.cinema_booking.exception.ErrorCode;
-import com.sidocinemas.cinema_booking.repository.UserRepository;
+import com.sidocinemas.cinema_booking.domain.CustomUserDetails;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +22,6 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider tokenProvider;
-    private final UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -34,15 +31,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String jwt = getJwtFromRequest(request);
 
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-                Long userId = tokenProvider.getUserIdFromJWT(jwt);
+                Claims claims = tokenProvider.getClaimsFromJWT(jwt);
+                Long userId = Long.parseLong(claims.getSubject());
+                String email = claims.get("email", String.class);
+                String role = claims.get("role", String.class);
 
-                User user = userRepository.findById(userId)
-                        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
-                UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
-                        .username(user.getEmail())
-                        .password(user.getPassword())
-                        .roles(user.getRole().name())
+                CustomUserDetails userDetails = CustomUserDetails.builder()
+                        .id(userId)
+                        .username(email)
+                        .password("") // Empty password since we don't need it for JWT
+                        .role(role)
                         .build();
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

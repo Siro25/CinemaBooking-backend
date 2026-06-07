@@ -17,8 +17,11 @@ public class JwtTokenProvider {
     @Value("${app.jwt.secret:defaultSecretKeyWithAtLeast32CharactersLongToEnsureHS256Algorithm}")
     private String jwtSecret;
 
-    @Value("${app.jwt.expiration-ms:86400000}")
+    @Value("${app.jwt.expiration-ms:86400000}") // 1 ngày
     private long jwtExpirationMs;
+
+    @Value("${app.jwt.refresh-expiration-ms:604800000}") // 7 ngày
+    private long jwtRefreshExpirationMs;
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
@@ -32,20 +35,38 @@ public class JwtTokenProvider {
                 .setSubject(Long.toString(user.getId()))
                 .claim("email", user.getEmail())
                 .claim("role", user.getRole().name())
-                .setIssuedAt(new Date())
+                .claim("type", "access")
+                .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public Long getUserIdFromJWT(String token) {
-        Claims claims = Jwts.parserBuilder()
+    public String generateRefreshToken(User user) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + jwtRefreshExpirationMs);
+
+        return Jwts.builder()
+                .setSubject(Long.toString(user.getId()))
+                .claim("email", user.getEmail())
+                .claim("role", user.getRole().name())
+                .claim("type", "refresh")
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public Claims getClaimsFromJWT(String token) {
+        return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
 
-        return Long.parseLong(claims.getSubject());
+    public Long getUserIdFromJWT(String token) {
+        return Long.parseLong(getClaimsFromJWT(token).getSubject());
     }
 
     public boolean validateToken(String authToken) {
@@ -65,4 +86,15 @@ public class JwtTokenProvider {
         }
         return false;
     }
+
+    public boolean validateRefreshToken(String token) {
+        try {
+            Claims claims = getClaimsFromJWT(token);
+            return "refresh".equals(claims.get("type", String.class));
+        } catch (Exception ex) {
+            log.error("Invalid refresh token: {}", ex.getMessage());
+            return false;
+        }
+    }
 }
+

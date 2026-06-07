@@ -1,27 +1,27 @@
 package com.sidocinemas.cinema_booking.util;
 
+import com.sidocinemas.cinema_booking.domain.CustomUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * Utility class cho việc xử lý Security Context
- * TODO: Implement JWT token parsing để lấy user ID thực tế
  */
 public class SecurityUtils {
 
     /**
-     * Lấy user ID từ JWT token trong SecurityContext
-     * TODO: Hiện tại return hardcode value, cần implement JWT parsing
+     * Lấy user ID từ SecurityContext
      */
     public static Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
-            // TODO: Parse JWT token để lấy user ID thực tế
-            // Tạm thời return 1L để test
-            return 1L;
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof CustomUserDetails) {
+                return ((CustomUserDetails) principal).getId();
+            }
         }
-        throw new RuntimeException("No authenticated user found");
+        throw new RuntimeException("No authenticated user found or invalid principal");
     }
 
     /**

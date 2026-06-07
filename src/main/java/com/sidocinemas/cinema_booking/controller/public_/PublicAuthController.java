@@ -1,6 +1,7 @@
 package com.sidocinemas.cinema_booking.controller.public_;
 
 import com.sidocinemas.cinema_booking.dto.request.LoginRequest;
+import com.sidocinemas.cinema_booking.dto.request.RefreshTokenRequest;
 import com.sidocinemas.cinema_booking.dto.request.RegisterRequest;
 import com.sidocinemas.cinema_booking.dto.response.ApiResponse;
 import com.sidocinemas.cinema_booking.dto.response.AuthResponse;
@@ -41,6 +42,18 @@ public class PublicAuthController {
         return ApiResponse.<AuthResponse>builder()
                 .data(response)
                 .message("Đăng ký tài khoản thành công")
+                .build();
+    }
+
+    /**
+     * Refresh Token
+     */
+    @PostMapping("/refresh")
+    public ApiResponse<AuthResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
+        AuthResponse response = authService.refreshToken(request);
+        return ApiResponse.<AuthResponse>builder()
+                .data(response)
+                .message("Làm mới token thành công")
                 .build();
     }
 }

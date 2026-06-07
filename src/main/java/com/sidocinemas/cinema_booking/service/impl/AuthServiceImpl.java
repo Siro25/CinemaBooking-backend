@@ -38,10 +38,12 @@ public class AuthServiceImpl implements AuthService {
             throw new AppException(ErrorCode.USER_NOT_ACTIVE);
         }
 
-        String token = jwtTokenProvider.generateToken(user);
+        String accessToken = jwtTokenProvider.generateToken(user);
+        String refreshToken = jwtTokenProvider.generateRefreshToken(user);
 
         return AuthResponse.builder()
-                .token(token)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .email(user.getEmail())
                 .fullName(user.getFullName())
                 .role(user.getRole())
@@ -65,10 +67,40 @@ public class AuthServiceImpl implements AuthService {
 
         user = userRepository.save(user);
 
-        String token = jwtTokenProvider.generateToken(user);
+        String accessToken = jwtTokenProvider.generateToken(user);
+        String refreshTokenStr = jwtTokenProvider.generateRefreshToken(user);
 
         return AuthResponse.builder()
-                .token(token)
+                .accessToken(accessToken)
+                .refreshToken(refreshTokenStr)
+                .email(user.getEmail())
+                .fullName(user.getFullName())
+                .role(user.getRole())
+                .build();
+    }
+
+    @Override
+    public AuthResponse refreshToken(com.sidocinemas.cinema_booking.dto.request.RefreshTokenRequest request) {
+        String requestRefreshToken = request.getRefreshToken();
+        
+        if (!jwtTokenProvider.validateRefreshToken(requestRefreshToken)) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED); 
+        }
+        
+        Long userId = jwtTokenProvider.getUserIdFromJWT(requestRefreshToken);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        if (user.getStatus() != UserStatus.ACTIVE) {
+            throw new AppException(ErrorCode.USER_NOT_ACTIVE);
+        }
+
+        String newAccessToken = jwtTokenProvider.generateToken(user);
+        String newRefreshToken = jwtTokenProvider.generateRefreshToken(user);
+
+        return AuthResponse.builder()
+                .accessToken(newAccessToken)
+                .refreshToken(newRefreshToken)
                 .email(user.getEmail())
                 .fullName(user.getFullName())
                 .role(user.getRole())
