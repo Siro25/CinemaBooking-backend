@@ -28,7 +28,8 @@ public enum ErrorCode {
     SEAT_NOT_BELONG_TO_ROOM(1020, "Ghế không thuộc phòng chiếu của suất chiếu này", HttpStatus.BAD_REQUEST),
     BOOKING_CANNOT_CANCEL(1021, "Chỉ có thể huỷ đặt vé ở trạng thái HOLD hoặc CONFIRMED", HttpStatus.BAD_REQUEST),
     BOOKING_ALREADY_CONFIRMED(1022, "Đặt vé đã được xác nhận", HttpStatus.BAD_REQUEST),
-    NO_SEATS_SELECTED(1023, "Vui lòng chọn ít nhất một ghế", HttpStatus.BAD_REQUEST);
+    NO_SEATS_SELECTED(1023, "Vui lòng chọn ít nhất một ghế", HttpStatus.BAD_REQUEST),
+    POSTER_NOT_FOUND(1024, "Không tìm thấy ảnh poster", HttpStatus.BAD_REQUEST);
 
     private final int code;
     private final String message;
