@@ -57,4 +57,8 @@ public class User {
             status = UserStatus.ACTIVE;
         }
     }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cinema_id")
+    Cinema cinema;
 }

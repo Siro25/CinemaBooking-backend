@@ -22,4 +22,6 @@ public class UserUpdateRequest {
 
     @NotNull(message = "Vai trò không được để trống")
     Role role;
+
+    Long cinemaId;
 }

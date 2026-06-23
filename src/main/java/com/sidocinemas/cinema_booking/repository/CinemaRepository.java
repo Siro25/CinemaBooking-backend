@@ -9,6 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface CinemaRepository extends JpaRepository<Cinema, Long> {
-    List<Cinema> findByManagerId(Long managerId);
     Optional<Cinema> findByName(String name);
 }

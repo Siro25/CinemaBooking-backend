@@ -20,7 +20,4 @@ public class CinemaRequest {
 
     @NotBlank(message = "ADDRESS_NOT_BLANK")
     String address;
-
-    @NotNull(message = "MANAGER_NOT_NULL")
-    Long managerId;
 }

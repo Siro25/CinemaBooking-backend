@@ -19,4 +19,6 @@ public class UserResponse {
     Role role;
     UserStatus status;
     LocalDateTime createdAt;
+    Long cinemaId;
+    String cinemaName;
 }

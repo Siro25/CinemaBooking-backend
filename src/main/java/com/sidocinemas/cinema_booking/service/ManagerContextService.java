@@ -42,10 +42,11 @@ public class ManagerContextService {
         User manager = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        return cinemaRepository.findByManagerId(manager.getId())
-                .stream()
-                .findFirst()
-                .orElseThrow(() -> new AppException(ErrorCode.CINEMA_NOT_FOUND));
+        if (manager.getCinema() == null) {
+            throw new AppException(ErrorCode.CINEMA_NOT_FOUND);
+        }
+
+        return manager.getCinema();
     }
 
     private String getCurrentEmail() {

@@ -27,10 +27,6 @@ public class Cinema {
     @Column(nullable = false, columnDefinition = "TEXT")
     String address;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "manager_id", nullable = false)
-    User manager;
-
     @OneToMany(mappedBy = "cinema", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     List<Room> rooms = new ArrayList<>();

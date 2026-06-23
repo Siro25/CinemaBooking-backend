@@ -6,10 +6,13 @@ import com.sidocinemas.cinema_booking.enums.Role;
 import com.sidocinemas.cinema_booking.domain.User;
 import com.sidocinemas.cinema_booking.exception.AppException;
 import com.sidocinemas.cinema_booking.exception.ErrorCode;
+import com.sidocinemas.cinema_booking.domain.Cinema;
 import com.sidocinemas.cinema_booking.repository.UserRepository;
+import com.sidocinemas.cinema_booking.repository.CinemaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -26,6 +29,7 @@ import java.util.List;
 public class AdminRoleController {
 
     private final UserRepository userRepository;
+    private final CinemaRepository cinemaRepository;
 
     @GetMapping
     public ApiResponse<List<Role>> getAllRoles() {
@@ -36,14 +40,31 @@ public class AdminRoleController {
     }
 
     @PatchMapping("/{userId}")
-    public ApiResponse<UserResponse> assignRole(@PathVariable Long userId, @RequestParam Role role) {
-        log.info("[ADMIN] Assigning role {} to user {}", role, userId);
+    @Transactional
+    public ApiResponse<UserResponse> assignRole(
+            @PathVariable Long userId, 
+            @RequestParam Role role,
+            @RequestParam(required = false) Long cinemaId) {
+        log.info("[ADMIN] Assigning role {} to user {}, cinemaId {}", role, userId, cinemaId);
         
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        
-        user.setRole(role);
-        user = userRepository.save(user);
+
+        if (role == Role.MANAGER && cinemaId != null) {
+            Cinema cinema = cinemaRepository.findById(cinemaId)
+                    .orElseThrow(() -> new AppException(ErrorCode.CINEMA_NOT_FOUND));
+            userRepository.updateRoleAndCinema(userId, role, cinema);
+        } else if (role == Role.MANAGER) {
+            // MANAGER nhưng ko chọn rạp: chỉ đổi role, giữ cinema cũ
+            userRepository.updateRoleAndClearCinema(userId, role);
+        } else {
+            // Role khác: xóa cinema
+            userRepository.updateRoleAndClearCinema(userId, role);
+        }
+
+        // Reload lại user sau khi update để trả response chính xác
+        user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         
         UserResponse response = UserResponse.builder()
                 .id(user.getId())
@@ -52,6 +73,8 @@ public class AdminRoleController {
                 .role(user.getRole())
                 .status(user.getStatus())
                 .createdAt(user.getCreatedAt())
+                .cinemaId(user.getCinema() != null ? user.getCinema().getId() : null)
+                .cinemaName(user.getCinema() != null ? user.getCinema().getName() : null)
                 .build();
                 
         return ApiResponse.<UserResponse>builder()

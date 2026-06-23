@@ -23,4 +23,6 @@ public class RegisterRequest {
 
     @NotBlank(message = "Full name is required")
     String fullName;
+
+    Long cinemaId;
 }

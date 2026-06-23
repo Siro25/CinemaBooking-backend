@@ -29,13 +29,9 @@ public class CinemaServiceImpl implements CinemaService {
     @Override
     @Transactional
     public CinemaResponse createCinema(CinemaRequest request) {
-        User manager = userRepository.findById(request.getManagerId())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-
         Cinema cinema = Cinema.builder()
                 .name(request.getName())
                 .address(request.getAddress())
-                .manager(manager)
                 .build();
 
         cinema = cinemaRepository.save(cinema);
@@ -48,12 +44,8 @@ public class CinemaServiceImpl implements CinemaService {
         Cinema cinema = cinemaRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CINEMA_NOT_FOUND));
 
-        User manager = userRepository.findById(request.getManagerId())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-
         cinema.setName(request.getName());
         cinema.setAddress(request.getAddress());
-        cinema.setManager(manager);
 
         cinema = cinemaRepository.save(cinema);
         return mapToResponse(cinema);
@@ -87,8 +79,6 @@ public class CinemaServiceImpl implements CinemaService {
                 .id(cinema.getId())
                 .name(cinema.getName())
                 .address(cinema.getAddress())
-                .managerId(cinema.getManager() != null ? cinema.getManager().getId() : null)
-                .managerName(cinema.getManager() != null ? cinema.getManager().getFullName() : null)
                 .build();
     }
 }

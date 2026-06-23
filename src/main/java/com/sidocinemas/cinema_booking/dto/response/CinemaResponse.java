@@ -16,6 +16,4 @@ public class CinemaResponse {
     Long id;
     String name;
     String address;
-    Long managerId;
-    String managerName;
 }
