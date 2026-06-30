@@ -1,17 +1,12 @@
-# Disable SQL-based seeding in favor of Java DataSeeder
-# To enable SQL seeding, uncomment the lines below and comment out DataSeeder.java
+-- Disable SQL-based seeding in favor of Java DataSeeder
+-- To enable SQL seeding, uncomment the lines below and comment out DataSeeder.java
 
-# ==============================================
-# SEED DATA FOR CINEMA BOOKING SYSTEM
-# ==============================================
+-- ==============================================
+-- SEED DATA FOR CINEMA BOOKING SYSTEM
+-- ==============================================
 
 -- Clear existing data (optional, use with caution in production)
--- DELETE FROM showtimes;
--- DELETE FROM seats;
--- DELETE FROM rooms;
--- DELETE FROM cinemas;
--- DELETE FROM movies;
--- DELETE FROM users;
+TRUNCATE TABLE users, movies, cinemas, rooms, seats, showtimes, tickets, bookings, payments RESTART IDENTITY CASCADE;
 
 -- ==============================================
 -- USERS DATA
@@ -115,10 +110,10 @@ INSERT INTO movies (title, description, duration, genre, age_rating, poster_url,
 -- CINEMAS DATA
 -- ==============================================
 
-INSERT INTO cinemas (name, address, manager_id) VALUES
-('SIDO Cinemas Hà Nội', '12 Phố Huế, Quận Hai Bà Trưng, Hà Nội', 2),
-('SIDO Cinemas TP.HCM', '196 Pasteur, Quận 3, TP. Hồ Chí Minh', 3),
-('SIDO Cinemas Đà Nẵng', '252 Võ Nguyên Giáp, Quận Sơn Trà, Đà Nẵng', 4);
+INSERT INTO cinemas (name, address) VALUES
+('SIDO Cinemas Hà Nội', '12 Phố Huế, Quận Hai Bà Trưng, Hà Nội'),
+('SIDO Cinemas TP.HCM', '196 Pasteur, Quận 3, TP. Hồ Chí Minh'),
+('SIDO Cinemas Đà Nẵng', '252 Võ Nguyên Giáp, Quận Sơn Trà, Đà Nẵng');
 
 -- ==============================================
 -- ROOMS DATA
@@ -126,31 +121,31 @@ INSERT INTO cinemas (name, address, manager_id) VALUES
 
 -- Rooms for Hanoi Cinema (Cinema ID: 1)
 INSERT INTO rooms (room_number, type, capacity, cinema_id) VALUES
-('R01', 'STANDARD', 120, 1),
+('R01', 'TYPE_2D', 120, 1),
 ('R02', 'IMAX', 180, 1),
-('R03', 'VIP', 80, 1),
-('R04', 'STANDARD', 150, 1);
+('R03', 'TYPE_3D', 80, 1),
+('R04', 'TYPE_2D', 150, 1);
 
 -- Rooms for Ho Chi Minh Cinema (Cinema ID: 2)
 INSERT INTO rooms (room_number, type, capacity, cinema_id) VALUES
 ('A1', 'IMAX', 200, 2),
-('A2', 'STANDARD', 140, 2),
-('A3', 'VIP', 60, 2),
-('A4', 'STANDARD', 160, 2),
+('A2', 'TYPE_2D', 140, 2),
+('A3', 'TYPE_3D', 60, 2),
+('A4', 'TYPE_2D', 160, 2),
 ('A5', 'IMAX', 220, 2);
 
 -- Rooms for Da Nang Cinema (Cinema ID: 3)
 INSERT INTO rooms (room_number, type, capacity, cinema_id) VALUES
-('DN01', 'STANDARD', 130, 3),
-('DN02', 'VIP', 70, 3),
-('DN03', 'STANDARD', 140, 3);
+('DN01', 'TYPE_2D', 130, 3),
+('DN02', 'TYPE_3D', 70, 3),
+('DN03', 'TYPE_2D', 140, 3);
 
 -- ==============================================
 -- SEATS DATA (Sample for Room 1 only)
 -- ==============================================
 
 -- Generate seats for Room R01 (120 seats: 10 rows x 12 seats each)
-INSERT INTO seats (row_letter, seat_number, type, room_id) VALUES
+INSERT INTO seats (seat_row, seat_number, type, room_id) VALUES
 -- Row A
 ('A', 1, 'STANDARD', 1), ('A', 2, 'STANDARD', 1), ('A', 3, 'STANDARD', 1), ('A', 4, 'STANDARD', 1),
 ('A', 5, 'STANDARD', 1), ('A', 6, 'STANDARD', 1), ('A', 7, 'STANDARD', 1), ('A', 8, 'STANDARD', 1),
@@ -203,39 +198,39 @@ INSERT INTO seats (row_letter, seat_number, type, room_id) VALUES
 -- Today's showtimes
 INSERT INTO showtimes (movie_id, room_id, start_time, end_time, base_price) VALUES
 -- Deadpool & Wolverine
-(1, 1, '2026-06-13 09:00:00', '2026-06-13 11:08:00', 120000),
-(1, 2, '2026-06-13 14:30:00', '2026-06-13 16:38:00', 180000),
-(1, 3, '2026-06-13 20:00:00', '2026-06-13 22:08:00', 250000),
+(1, 1, '2026-06-30 09:00:00', '2026-06-30 11:08:00', 120000),
+(1, 2, '2026-06-30 14:30:00', '2026-06-30 16:38:00', 180000),
+(1, 3, '2026-06-30 20:00:00', '2026-06-30 22:08:00', 250000),
 
 -- Inside Out 2
-(3, 1, '2026-06-13 11:30:00', '2026-06-13 13:06:00', 100000),
-(3, 4, '2026-06-13 16:00:00', '2026-06-13 17:36:00', 120000),
+(3, 1, '2026-06-30 11:30:00', '2026-06-30 13:06:00', 100000),
+(3, 4, '2026-06-30 16:00:00', '2026-06-30 17:36:00', 120000),
 
 -- Moana 2
-(4, 1, '2026-06-13 15:00:00', '2026-06-13 16:40:00', 110000),
-(4, 2, '2026-06-13 18:30:00', '2026-06-13 20:10:00', 150000),
+(4, 1, '2026-06-30 15:00:00', '2026-06-30 16:40:00', 110000),
+(4, 2, '2026-06-30 18:30:00', '2026-06-30 20:10:00', 150000),
 
 -- Wicked
-(5, 3, '2026-06-13 13:00:00', '2026-06-13 15:40:00', 200000),
-(5, 2, '2026-06-13 21:00:00', '2026-06-13 23:40:00', 220000),
+(5, 3, '2026-06-30 13:00:00', '2026-06-30 15:40:00', 200000),
+(5, 2, '2026-06-30 21:00:00', '2026-06-30 23:40:00', 220000),
 
 -- Gladiator II
-(6, 4, '2026-06-13 19:30:00', '2026-06-13 21:58:00', 140000),
+(6, 4, '2026-06-30 19:30:00', '2026-06-30 21:58:00', 140000);
 
 -- Tomorrow's showtimes
 INSERT INTO showtimes (movie_id, room_id, start_time, end_time, base_price) VALUES
 -- Deadpool & Wolverine
-(1, 1, '2026-06-14 10:00:00', '2026-06-14 12:08:00', 120000),
-(1, 2, '2026-06-14 15:30:00', '2026-06-14 17:38:00', 180000),
-(1, 3, '2026-06-14 21:00:00', '2026-06-14 23:08:00', 250000),
+(1, 1, '2026-07-01 10:00:00', '2026-07-01 12:08:00', 120000),
+(1, 2, '2026-07-01 15:30:00', '2026-07-01 17:38:00', 180000),
+(1, 3, '2026-07-01 21:00:00', '2026-07-01 23:08:00', 250000),
 
 -- Inside Out 2
-(3, 1, '2026-06-14 12:30:00', '2026-06-14 14:06:00', 100000),
-(3, 4, '2026-06-14 17:00:00', '2026-06-14 18:36:00', 120000),
+(3, 1, '2026-07-01 12:30:00', '2026-07-01 14:06:00', 100000),
+(3, 4, '2026-07-01 17:00:00', '2026-07-01 18:36:00', 120000),
 
 -- Vietnamese Movies
-(10, 4, '2026-06-14 14:00:00', '2026-06-14 16:11:00', 90000),
-(11, 1, '2026-06-14 18:00:00', '2026-06-14 19:50:00', 95000);
+(10, 4, '2026-07-01 14:00:00', '2026-07-01 16:11:00', 90000),
+(11, 1, '2026-07-01 18:00:00', '2026-07-01 19:50:00', 95000);
 
 -- ==============================================
 -- SUMMARY
