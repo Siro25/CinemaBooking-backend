@@ -15,4 +15,6 @@ public class AuthResponse {
     String email;
     String fullName;
     Role role;
+    Long id;
+    Long cinemaId;
 }

@@ -47,6 +47,8 @@ public class AuthServiceImpl implements AuthService {
                 .email(user.getEmail())
                 .fullName(user.getFullName())
                 .role(user.getRole())
+                .id(user.getId())
+                .cinemaId(user.getCinema() != null ? user.getCinema().getId() : null)
                 .build();
     }
 
@@ -76,6 +78,7 @@ public class AuthServiceImpl implements AuthService {
                 .email(user.getEmail())
                 .fullName(user.getFullName())
                 .role(user.getRole())
+                .id(user.getId())
                 .build();
     }
 
@@ -104,6 +107,8 @@ public class AuthServiceImpl implements AuthService {
                 .email(user.getEmail())
                 .fullName(user.getFullName())
                 .role(user.getRole())
+                .id(user.getId())
+                .cinemaId(user.getCinema() != null ? user.getCinema().getId() : null)
                 .build();
     }
 }

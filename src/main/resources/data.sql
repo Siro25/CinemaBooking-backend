@@ -5,8 +5,8 @@
 -- SEED DATA FOR CINEMA BOOKING SYSTEM
 -- ==============================================
 
--- Clear existing data (optional, use with caution in production)
-TRUNCATE TABLE users, movies, cinemas, rooms, seats, showtimes, tickets, bookings, payments RESTART IDENTITY CASCADE;
+-- Xóa toàn bộ data cũ và reset sequence (Hibernate đã tạo bảng trước khi script này chạy)
+TRUNCATE TABLE payments, bookings, tickets, seats, showtimes, rooms, cinemas, movies, users RESTART IDENTITY CASCADE;
 
 -- ==============================================
 -- USERS DATA
@@ -14,19 +14,19 @@ TRUNCATE TABLE users, movies, cinemas, rooms, seats, showtimes, tickets, booking
 
 -- Admin User
 INSERT INTO users (email, password, full_name, role, status, created_at, updated_at) VALUES
-('admin@sidocinemas.com', '$2a$10$N.FS3O3ihaBjMZtiSMrEPuyaOcKhLBzqjqN3.VW1knXXhTZ1OQWh6', 'Admin System', 'ADMIN', 'ACTIVE', NOW(), NOW());
+('admin@sidocinemas.com', '$2a$10$KjHp.hfHjr/sGgHCC20xtuDbVbIUIzgUGLUa8FScukEJ9aCz5Y2iy', 'Admin System', 'ADMIN', 'ACTIVE', NOW(), NOW());
 
 -- Manager Users
 INSERT INTO users (email, password, full_name, role, status, created_at, updated_at) VALUES
-('manager.hanoi@sidocinemas.com', '$2a$10$N.FS3O3ihaBjMZtiSMrEPuyaOcKhLBzqjqN3.VW1knXXhTZ1OQWh6', 'Nguyễn Văn Quản', 'MANAGER', 'ACTIVE', NOW(), NOW()),
-('manager.hcm@sidocinemas.com', '$2a$10$N.FS3O3ihaBjMZtiSMrEPuyaOcKhLBzqjqN3.VW1knXXhTZ1OQWh6', 'Trần Thị Mai', 'MANAGER', 'ACTIVE', NOW(), NOW()),
-('manager.danang@sidocinemas.com', '$2a$10$N.FS3O3ihaBjMZtiSMrEPuyaOcKhLBzqjqN3.VW1knXXhTZ1OQWh6', 'Lê Minh Khôi', 'MANAGER', 'ACTIVE', NOW(), NOW());
+('manager.hanoi@sidocinemas.com', '$2a$10$KjHp.hfHjr/sGgHCC20xtuDbVbIUIzgUGLUa8FScukEJ9aCz5Y2iy', 'Nguyễn Văn Quản', 'MANAGER', 'ACTIVE', NOW(), NOW()),
+('manager.hcm@sidocinemas.com', '$2a$10$KjHp.hfHjr/sGgHCC20xtuDbVbIUIzgUGLUa8FScukEJ9aCz5Y2iy', 'Trần Thị Mai', 'MANAGER', 'ACTIVE', NOW(), NOW()),
+('manager.danang@sidocinemas.com', '$2a$10$KjHp.hfHjr/sGgHCC20xtuDbVbIUIzgUGLUa8FScukEJ9aCz5Y2iy', 'Lê Minh Khôi', 'MANAGER', 'ACTIVE', NOW(), NOW());
 
 -- Customer Users
 INSERT INTO users (email, password, full_name, role, status, created_at, updated_at) VALUES
-('customer1@example.com', '$2a$10$N.FS3O3ihaBjMZtiSMrEPuyaOcKhLBzqjqN3.VW1knXXhTZ1OQWh6', 'Phạm Minh Tuấn', 'CUSTOMER', 'ACTIVE', NOW(), NOW()),
-('customer2@example.com', '$2a$10$N.FS3O3ihaBjMZtiSMrEPuyaOcKhLBzqjqN3.VW1knXXhTZ1OQWh6', 'Hoàng Thị Lan', 'CUSTOMER', 'ACTIVE', NOW(), NOW()),
-('customer3@example.com', '$2a$10$N.FS3O3ihaBjMZtiSMrEPuyaOcKhLBzqjqN3.VW1knXXhTZ1OQWh6', 'Vũ Đình Nam', 'CUSTOMER', 'ACTIVE', NOW(), NOW());
+('customer1@example.com', '$2a$10$KjHp.hfHjr/sGgHCC20xtuDbVbIUIzgUGLUa8FScukEJ9aCz5Y2iy', 'Phạm Minh Tuấn', 'CUSTOMER', 'ACTIVE', NOW(), NOW()),
+('customer2@example.com', '$2a$10$KjHp.hfHjr/sGgHCC20xtuDbVbIUIzgUGLUa8FScukEJ9aCz5Y2iy', 'Hoàng Thị Lan', 'CUSTOMER', 'ACTIVE', NOW(), NOW()),
+('customer3@example.com', '$2a$10$KjHp.hfHjr/sGgHCC20xtuDbVbIUIzgUGLUa8FScukEJ9aCz5Y2iy', 'Vũ Đình Nam', 'CUSTOMER', 'ACTIVE', NOW(), NOW());
 
 -- ==============================================
 -- MOVIES DATA - XU HƯỚNG 2024-2026
