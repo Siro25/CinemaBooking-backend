@@ -32,9 +32,7 @@ public class CustomerBookingController {
     @PreAuthorize("hasRole('CUSTOMER')")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<BookingResponse> createBooking(@Valid @RequestBody BookingRequest request) {
-        // TODO: Lấy customerId từ JWT token trong SecurityContext
-        // Tạm thời hardcode customerId = 1 để test, cần implement JWT service
-        Long customerId = 1L; // Sẽ được thay thế bằng getCurrentUserId()
+        Long customerId = com.sidocinemas.cinema_booking.util.SecurityUtils.getCurrentUserId();
         log.info("Customer creating booking for showtimeId={}", request.getShowtimeId());
         return ApiResponse.<BookingResponse>builder()
                 .data(bookingService.createBooking(customerId, request))
@@ -75,8 +73,7 @@ public class CustomerBookingController {
     @GetMapping
     @PreAuthorize("hasRole('CUSTOMER')")
     public ApiResponse<List<BookingResponse>> getMyBookings() {
-        // TODO: Lấy customerId từ JWT và filter bookings
-        Long customerId = 1L; // Tạm thời hardcode
+        Long customerId = com.sidocinemas.cinema_booking.util.SecurityUtils.getCurrentUserId();
         log.info("Customer getting booking history");
         return ApiResponse.<List<BookingResponse>>builder()
                 .data(bookingService.getBookingsByCustomer(customerId))

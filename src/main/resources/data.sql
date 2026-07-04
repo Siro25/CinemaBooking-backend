@@ -115,6 +115,11 @@ INSERT INTO cinemas (name, address) VALUES
 ('SIDO Cinemas TP.HCM', '196 Pasteur, Quận 3, TP. Hồ Chí Minh'),
 ('SIDO Cinemas Đà Nẵng', '252 Võ Nguyên Giáp, Quận Sơn Trà, Đà Nẵng');
 
+-- Gán rạp cho từng Manager (cinema_id theo thứ tự insert ở trên: HN=1, HCM=2, DN=3)
+UPDATE users SET cinema_id = 1 WHERE email = 'manager.hanoi@sidocinemas.com';
+UPDATE users SET cinema_id = 2 WHERE email = 'manager.hcm@sidocinemas.com';
+UPDATE users SET cinema_id = 3 WHERE email = 'manager.danang@sidocinemas.com';
+
 -- ==============================================
 -- ROOMS DATA
 -- ==============================================

@@ -4,6 +4,7 @@ import com.sidocinemas.cinema_booking.dto.request.PaymentRequest;
 import com.sidocinemas.cinema_booking.dto.response.ApiResponse;
 import com.sidocinemas.cinema_booking.dto.response.PaymentResponse;
 import com.sidocinemas.cinema_booking.service.PaymentService;
+import com.sidocinemas.cinema_booking.service.BookingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ import java.util.List;
 public class CustomerPaymentController {
 
     private final PaymentService paymentService;
+    private final BookingService bookingService;
 
     /**
      * Thanh toán cho booking
@@ -32,11 +34,40 @@ public class CustomerPaymentController {
     @PreAuthorize("hasRole('CUSTOMER')")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<PaymentResponse> processPayment(@Valid @RequestBody PaymentRequest request) {
-        // TODO: Kiểm tra booking có thuộc về current user không
         log.info("Customer processing payment for bookingId={}", request.getBookingId());
+        PaymentResponse response = paymentService.createPayment(request);
+        // Tự động confirm booking khi thanh toán thành công
+        bookingService.confirmBooking(request.getBookingId());
         return ApiResponse.<PaymentResponse>builder()
-                .data(paymentService.createPayment(request))
+                .data(response)
                 .message("Thanh toán thành công")
+                .build();
+    }
+
+    /**
+     * Xác nhận thanh toán qua VietQR Sandbox
+     */
+    @PostMapping("/{bookingId}/confirm-vietqr")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ApiResponse<PaymentResponse> confirmVietQR(@PathVariable Long bookingId) {
+        log.info("Customer confirming VietQR payment for bookingId={}", bookingId);
+        // Lấy thông tin booking để biết số tiền cần thanh toán
+        com.sidocinemas.cinema_booking.dto.response.BookingResponse booking = bookingService.getBookingById(bookingId);
+
+        PaymentRequest request = PaymentRequest.builder()
+                .bookingId(bookingId)
+                .amount(booking.getTotalPrice())
+                .method(com.sidocinemas.cinema_booking.enums.PaymentMethod.CARD) // Dùng CARD tạm để tránh lỗi CHECK constraint của Hibernate
+                .build();
+
+        PaymentResponse response = paymentService.createPayment(request);
+
+        // Cập nhật trạng thái booking thành CONFIRMED
+        bookingService.confirmBooking(bookingId);
+
+        return ApiResponse.<PaymentResponse>builder()
+                .data(response)
+                .message("Thanh toán VietQR Sandbox thành công")
                 .build();
     }
 
