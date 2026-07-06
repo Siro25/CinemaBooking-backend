@@ -81,6 +81,21 @@ public class PaymentServiceImpl implements PaymentService {
                 .toList();
     }
 
+    @Override
+    public List<PaymentResponse> getPaymentsByCustomer(Long customerId) {
+        return paymentRepository.findByBooking_Customer_IdOrderByCreatedAtDesc(customerId)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    @Override
+    public PaymentResponse getMyPaymentById(Long id, Long customerId) {
+        Payment payment = paymentRepository.findByIdAndBooking_Customer_Id(id, customerId)
+                .orElseThrow(() -> new AppException(ErrorCode.PAYMENT_NOT_FOUND));
+        return mapToResponse(payment);
+    }
+
     private PaymentResponse mapToResponse(Payment payment) {
         return PaymentResponse.builder()
                 .id(payment.getId())

@@ -4,6 +4,7 @@ import com.sidocinemas.cinema_booking.dto.request.UserUpdateRequest;
 import com.sidocinemas.cinema_booking.dto.response.ApiResponse;
 import com.sidocinemas.cinema_booking.dto.response.UserResponse;
 import com.sidocinemas.cinema_booking.service.UserService;
+import com.sidocinemas.cinema_booking.util.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,9 +29,8 @@ public class CustomerProfileController {
     @GetMapping
     @PreAuthorize("hasRole('CUSTOMER')")
     public ApiResponse<UserResponse> getMyProfile() {
-        // TODO: Lấy userId từ JWT token trong SecurityContext
-        Long userId = 1L; // Tạm thời hardcode để test
-        log.info("Customer getting profile");
+        Long userId = SecurityUtils.getCurrentUserId();
+        log.info("[CUSTOMER] Getting profile for userId={}", userId);
         return ApiResponse.<UserResponse>builder()
                 .data(userService.getUserById(userId))
                 .build();
@@ -42,9 +42,8 @@ public class CustomerProfileController {
     @PutMapping
     @PreAuthorize("hasRole('CUSTOMER')")
     public ApiResponse<UserResponse> updateProfile(@Valid @RequestBody UserUpdateRequest request) {
-        // TODO: Lấy userId từ JWT token và chỉ cho phép update profile của chính mình
-        Long userId = 1L; // Tạm thời hardcode để test
-        log.info("Customer updating profile");
+        Long userId = SecurityUtils.getCurrentUserId();
+        log.info("[CUSTOMER] Updating profile for userId={}", userId);
         return ApiResponse.<UserResponse>builder()
                 .data(userService.updateUser(userId, request))
                 .message("Cập nhật thông tin thành công")

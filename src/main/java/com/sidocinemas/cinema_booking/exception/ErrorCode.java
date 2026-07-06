@@ -29,7 +29,9 @@ public enum ErrorCode {
     BOOKING_CANNOT_CANCEL(1021, "Chỉ có thể huỷ đặt vé ở trạng thái HOLD hoặc CONFIRMED", HttpStatus.BAD_REQUEST),
     BOOKING_ALREADY_CONFIRMED(1022, "Đặt vé đã được xác nhận", HttpStatus.BAD_REQUEST),
     NO_SEATS_SELECTED(1023, "Vui lòng chọn ít nhất một ghế", HttpStatus.BAD_REQUEST),
-    POSTER_NOT_FOUND(1024, "Không tìm thấy ảnh poster", HttpStatus.BAD_REQUEST);
+    POSTER_NOT_FOUND(1024, "Không tìm thấy ảnh poster", HttpStatus.BAD_REQUEST),
+    ACCESS_DENIED(1025, "Bạn không có quyền truy cập tài nguyên này", HttpStatus.FORBIDDEN),
+    MANAGER_NOT_ASSIGNED(1026, "Manager chưa được gán vào rạp nào", HttpStatus.FORBIDDEN);
 
     private final int code;
     private final String message;

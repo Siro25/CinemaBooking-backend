@@ -3,7 +3,10 @@ package com.sidocinemas.cinema_booking.controller.customer;
 import com.sidocinemas.cinema_booking.dto.request.BookingRequest;
 import com.sidocinemas.cinema_booking.dto.response.ApiResponse;
 import com.sidocinemas.cinema_booking.dto.response.BookingResponse;
+import com.sidocinemas.cinema_booking.exception.AppException;
+import com.sidocinemas.cinema_booking.exception.ErrorCode;
 import com.sidocinemas.cinema_booking.service.BookingService;
+import com.sidocinemas.cinema_booking.util.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,8 +35,8 @@ public class CustomerBookingController {
     @PreAuthorize("hasRole('CUSTOMER')")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<BookingResponse> createBooking(@Valid @RequestBody BookingRequest request) {
-        Long customerId = com.sidocinemas.cinema_booking.util.SecurityUtils.getCurrentUserId();
-        log.info("Customer creating booking for showtimeId={}", request.getShowtimeId());
+        Long customerId = SecurityUtils.getCurrentUserId();
+        log.info("[CUSTOMER] Creating booking for showtimeId={}, customerId={}", request.getShowtimeId(), customerId);
         return ApiResponse.<BookingResponse>builder()
                 .data(bookingService.createBooking(customerId, request))
                 .message("Đặt vé thành công, vui lòng thanh toán để xác nhận")
@@ -42,12 +45,20 @@ public class CustomerBookingController {
 
     /**
      * Huỷ booking của chính mình
+     * Kiểm tra booking thuộc về customer hiện tại trước khi huỷ
      */
     @PatchMapping("/{id}/cancel")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ApiResponse<BookingResponse> cancelBooking(@PathVariable Long id) {
-        // TODO: Kiểm tra booking có thuộc về current user không
-        log.info("Customer cancelling booking id={}", id);
+        Long customerId = SecurityUtils.getCurrentUserId();
+        log.info("[CUSTOMER] Cancelling booking id={}, customerId={}", id, customerId);
+
+        // Kiểm tra booking có thuộc về customer này không
+        BookingResponse booking = bookingService.getBookingById(id);
+        if (!customerId.equals(booking.getCustomerId())) {
+            throw new AppException(ErrorCode.ACCESS_DENIED);
+        }
+
         return ApiResponse.<BookingResponse>builder()
                 .data(bookingService.cancelBooking(id))
                 .message("Huỷ đặt vé thành công")
@@ -56,14 +67,21 @@ public class CustomerBookingController {
 
     /**
      * Lấy chi tiết booking của mình
+     * Kiểm tra booking thuộc về customer hiện tại
      */
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ApiResponse<BookingResponse> getBookingById(@PathVariable Long id) {
-        // TODO: Kiểm tra booking có thuộc về current user không
-        log.info("Customer getting booking id={}", id);
+        Long customerId = SecurityUtils.getCurrentUserId();
+        log.info("[CUSTOMER] Getting booking id={}, customerId={}", id, customerId);
+
+        BookingResponse booking = bookingService.getBookingById(id);
+        if (!customerId.equals(booking.getCustomerId())) {
+            throw new AppException(ErrorCode.ACCESS_DENIED);
+        }
+
         return ApiResponse.<BookingResponse>builder()
-                .data(bookingService.getBookingById(id))
+                .data(booking)
                 .build();
     }
 
@@ -73,8 +91,8 @@ public class CustomerBookingController {
     @GetMapping
     @PreAuthorize("hasRole('CUSTOMER')")
     public ApiResponse<List<BookingResponse>> getMyBookings() {
-        Long customerId = com.sidocinemas.cinema_booking.util.SecurityUtils.getCurrentUserId();
-        log.info("Customer getting booking history");
+        Long customerId = SecurityUtils.getCurrentUserId();
+        log.info("[CUSTOMER] Getting booking history for customerId={}", customerId);
         return ApiResponse.<List<BookingResponse>>builder()
                 .data(bookingService.getBookingsByCustomer(customerId))
                 .build();
