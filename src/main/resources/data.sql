@@ -6,7 +6,7 @@
 -- ==============================================
 
 -- Xóa toàn bộ data cũ và reset sequence (Hibernate đã tạo bảng trước khi script này chạy)
-TRUNCATE TABLE payments, bookings, tickets, seats, showtimes, rooms, cinemas, movies, users RESTART IDENTITY CASCADE;
+TRUNCATE TABLE payments, bookings, tickets, seats, showtimes, rooms, cinemas, movies, genres, users RESTART IDENTITY CASCADE;
 
 -- ==============================================
 -- USERS DATA
@@ -27,6 +27,22 @@ INSERT INTO users (email, password, full_name, role, status, created_at, updated
 ('customer1@example.com', '$2a$10$KjHp.hfHjr/sGgHCC20xtuDbVbIUIzgUGLUa8FScukEJ9aCz5Y2iy', 'Phạm Minh Tuấn', 'CUSTOMER', 'ACTIVE', NOW(), NOW()),
 ('customer2@example.com', '$2a$10$KjHp.hfHjr/sGgHCC20xtuDbVbIUIzgUGLUa8FScukEJ9aCz5Y2iy', 'Hoàng Thị Lan', 'CUSTOMER', 'ACTIVE', NOW(), NOW()),
 ('customer3@example.com', '$2a$10$KjHp.hfHjr/sGgHCC20xtuDbVbIUIzgUGLUa8FScukEJ9aCz5Y2iy', 'Vũ Đình Nam', 'CUSTOMER', 'ACTIVE', NOW(), NOW());
+
+-- ==============================================
+-- GENRES DATA (Thể loại phim)
+-- ==============================================
+
+INSERT INTO genres (name, description, created_at) VALUES
+('Hành Động', 'Phim có nhiều cảnh chiến đấu, rượt đuổi, đầy kịch tính', NOW()),
+('Kinh Dị', 'Phim gây sợ hãi, hồi hộp, đầy ám ảnh', NOW()),
+('Hài Hước', 'Phim mang lại tiếng cười, giải trí nhẹ nhàng', NOW()),
+('Tình Cảm', 'Phim lãng mạn, cảm động, xúc tích', NOW()),
+('Hoạt Hình', 'Phim hoạt hình dành cho mọi lứa tuổi', NOW()),
+('Khoa Học Viễn Tưởng', 'Phim về tương lai, công nghệ, vũ trụ', NOW()),
+('Phíu Lưu', 'Phim hành trình khám phá đầy gay cấn', NOW()),
+('Tâm Lý', 'Phim khai thác nội tâm nhân vật sâu sắc', NOW()),
+('Gia Đình', 'Phim giá trị gia đình, phù hợp mọi đối tượng', NOW()),
+('Tội Phạm', 'Phim xã hội đen, trinh thám, đấu trí', NOW());
 
 -- ==============================================
 -- MOVIES DATA - XU HƯỚNG 2024-2026

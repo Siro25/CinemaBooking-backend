@@ -31,7 +31,9 @@ public enum ErrorCode {
     NO_SEATS_SELECTED(1023, "Vui lòng chọn ít nhất một ghế", HttpStatus.BAD_REQUEST),
     POSTER_NOT_FOUND(1024, "Không tìm thấy ảnh poster", HttpStatus.BAD_REQUEST),
     ACCESS_DENIED(1025, "Bạn không có quyền truy cập tài nguyên này", HttpStatus.FORBIDDEN),
-    MANAGER_NOT_ASSIGNED(1026, "Manager chưa được gán vào rạp nào", HttpStatus.FORBIDDEN);
+    MANAGER_NOT_ASSIGNED(1026, "Manager chưa được gán vào rạp nào", HttpStatus.FORBIDDEN),
+    GENRE_NOT_FOUND(1027, "Không tìm thấy thể loại phim", HttpStatus.NOT_FOUND),
+    GENRE_ALREADY_EXISTS(1028, "Thể loại phim này đã tồn tại", HttpStatus.BAD_REQUEST);
 
     private final int code;
     private final String message;
