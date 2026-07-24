@@ -36,6 +36,7 @@ public class BookingServiceImpl implements BookingService {
     TicketRepository ticketRepository;
     UserRepository userRepository;
     CinemaRepository cinemaRepository;
+    SystemSettingRepository systemSettingRepository;
 
     // ── Hệ số giá theo loại ghế ─────────────────────────────────────────────
     private static final BigDecimal VIP_TYPE = new BigDecimal("1.5");
@@ -53,6 +54,13 @@ public class BookingServiceImpl implements BookingService {
 
         Showtime showtime = showtimeRepository.findById(request.getShowtimeId())
                 .orElseThrow(() -> new AppException(ErrorCode.SHOWTIME_NOT_FOUND));
+
+        // Kiểm tra giới hạn số vé tối đa
+        SystemSetting setting = systemSettingRepository.findById(1L).orElse(null);
+        int maxTickets = (setting != null) ? setting.getMaxTicketsPerBooking() : 10;
+        if (request.getSeatIds().size() > maxTickets) {
+            throw new IllegalArgumentException("Không thể đặt quá " + maxTickets + " vé trong một lần giao dịch.");
+        }
 
         Long roomId = showtime.getRoom().getId();
 
