@@ -33,7 +33,10 @@ public enum ErrorCode {
     ACCESS_DENIED(1025, "Bạn không có quyền truy cập tài nguyên này", HttpStatus.FORBIDDEN),
     MANAGER_NOT_ASSIGNED(1026, "Manager chưa được gán vào rạp nào", HttpStatus.FORBIDDEN),
     GENRE_NOT_FOUND(1027, "Không tìm thấy thể loại phim", HttpStatus.NOT_FOUND),
-    GENRE_ALREADY_EXISTS(1028, "Thể loại phim này đã tồn tại", HttpStatus.BAD_REQUEST);
+    GENRE_ALREADY_EXISTS(1028, "Thể loại phim này đã tồn tại", HttpStatus.BAD_REQUEST),
+    SEAT_HELD_BY_ANOTHER_USER(1029, "Ghế đang được người khác giữ chỗ, vui lòng chọn ghế khác", HttpStatus.CONFLICT),
+    BOOKING_HOLD_EXPIRED(1030, "Thời gian giữ chỗ đã hết hạn, vui lòng đặt lại", HttpStatus.BAD_REQUEST),
+    MAX_TICKETS_EXCEEDED(1031, "Vượt quá số vé tối đa cho phép trong một lần đặt", HttpStatus.BAD_REQUEST);
 
     private final int code;
     private final String message;

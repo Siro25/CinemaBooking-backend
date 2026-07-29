@@ -4,12 +4,14 @@ import com.sidocinemas.cinema_booking.domain.Booking;
 import com.sidocinemas.cinema_booking.domain.Payment;
 import com.sidocinemas.cinema_booking.dto.request.PaymentRequest;
 import com.sidocinemas.cinema_booking.dto.response.PaymentResponse;
+import com.sidocinemas.cinema_booking.enums.BookingStatus;
 import com.sidocinemas.cinema_booking.enums.PaymentStatus;
 import com.sidocinemas.cinema_booking.exception.AppException;
 import com.sidocinemas.cinema_booking.exception.ErrorCode;
 import com.sidocinemas.cinema_booking.repository.BookingRepository;
 import com.sidocinemas.cinema_booking.repository.PaymentRepository;
 import com.sidocinemas.cinema_booking.service.PaymentService;
+import com.sidocinemas.cinema_booking.service.SeatHoldService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,6 +28,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final BookingRepository bookingRepository;
+    private final SeatHoldService seatHoldService;
 
     @Override
     @Transactional
@@ -57,6 +60,22 @@ public class PaymentServiceImpl implements PaymentService {
 
         payment.setStatus(status);
         payment = paymentRepository.save(payment);
+
+        Booking booking = payment.getBooking();
+        List<Long> seatIds = booking.getTickets().stream()
+                .map(t -> t.getSeat().getId())
+                .toList();
+
+        if (status == PaymentStatus.SUCCESS) {
+            booking.setStatus(BookingStatus.CONFIRMED);
+            bookingRepository.save(booking);
+            seatHoldService.releaseSeats(booking.getShowtime().getId(), seatIds);
+        } else if (status == PaymentStatus.FAILED) {
+            booking.setStatus(BookingStatus.CANCELLED);
+            bookingRepository.save(booking);
+            seatHoldService.releaseSeats(booking.getShowtime().getId(), seatIds);
+        }
+
         return mapToResponse(payment);
     }
 

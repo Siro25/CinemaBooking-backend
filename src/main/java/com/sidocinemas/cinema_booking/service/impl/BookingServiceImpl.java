@@ -12,14 +12,18 @@ import com.sidocinemas.cinema_booking.exception.AppException;
 import com.sidocinemas.cinema_booking.exception.ErrorCode;
 import com.sidocinemas.cinema_booking.repository.*;
 import com.sidocinemas.cinema_booking.service.BookingService;
+import com.sidocinemas.cinema_booking.service.SeatHoldService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -37,10 +41,15 @@ public class BookingServiceImpl implements BookingService {
     UserRepository userRepository;
     CinemaRepository cinemaRepository;
     SystemSettingRepository systemSettingRepository;
+    SeatHoldService seatHoldService;
 
     // ── Hệ số giá theo loại ghế ─────────────────────────────────────────────
     private static final BigDecimal VIP_TYPE = new BigDecimal("1.5");
     private static final BigDecimal COUPLE_TYPE = new BigDecimal("2.0");
+
+    @NonFinal
+    @Value("${seat-hold.ttl-minutes:10}")
+    long ttlMinutes;
 
     @Override
     @Transactional
@@ -59,7 +68,12 @@ public class BookingServiceImpl implements BookingService {
         SystemSetting setting = systemSettingRepository.findById(1L).orElse(null);
         int maxTickets = (setting != null) ? setting.getMaxTicketsPerBooking() : 10;
         if (request.getSeatIds().size() > maxTickets) {
-            throw new IllegalArgumentException("Không thể đặt quá " + maxTickets + " vé trong một lần giao dịch.");
+            throw new AppException(ErrorCode.MAX_TICKETS_EXCEEDED);
+        }
+
+        // Kiểm tra ghế bị người khác giữ trên Redis
+        if (seatHoldService.isAnyHeldByOther(request.getShowtimeId(), request.getSeatIds(), customerId)) {
+            throw new AppException(ErrorCode.SEAT_HELD_BY_ANOTHER_USER);
         }
 
         Long roomId = showtime.getRoom().getId();
@@ -76,7 +90,8 @@ public class BookingServiceImpl implements BookingService {
         }
 
         // 2. Kiểm tra ghế chưa bị đặt (race-condition safe với @Transactional)
-        boolean anyBooked = ticketRepository.existsBookedSeats(request.getShowtimeId(), request.getSeatIds());
+        LocalDateTime expirationTime = LocalDateTime.now().minusMinutes(ttlMinutes);
+        boolean anyBooked = ticketRepository.existsBookedSeats(request.getShowtimeId(), request.getSeatIds(), expirationTime);
         if (anyBooked) {
             throw new AppException(ErrorCode.SEAT_ALREADY_BOOKED);
         }
@@ -115,6 +130,9 @@ public class BookingServiceImpl implements BookingService {
         booking = bookingRepository.save(booking);
         log.info("Created booking id={} for customerId={}, showtimeId={}, seats={}",
                 booking.getId(), customerId, request.getShowtimeId(), request.getSeatIds());
+
+        // Giữ ghế trong Redis với TTL (sau khi DB commit thành công)
+        seatHoldService.holdSeats(request.getShowtimeId(), request.getSeatIds(), customerId);
 
         return mapToResponse(booking);
     }

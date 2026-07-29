@@ -14,9 +14,13 @@ import com.sidocinemas.cinema_booking.service.SeatService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,6 +34,10 @@ public class SeatServiceImpl implements SeatService {
     RoomRepository roomRepository;
     ShowtimeRepository showtimeRepository;
     TicketRepository ticketRepository;
+
+    @NonFinal
+    @Value("${seat-hold.ttl-minutes:10}")
+    long ttlMinutes;
 
     @Override
     @Transactional
@@ -100,8 +108,9 @@ public class SeatServiceImpl implements SeatService {
                 .orElseThrow(() -> new AppException(ErrorCode.SHOWTIME_NOT_FOUND));
         Long roomId = showtime.getRoom().getId();
         // Lấy tập các seat đã bị book
+        LocalDateTime expirationTime = LocalDateTime.now().minusMinutes(ttlMinutes);
         Set<Long> bookedSeatIds = ticketRepository
-                .findBookedSeatsByShowtimeId(showtimeId)
+                .findBookedSeatsByShowtimeId(showtimeId, expirationTime)
                 .stream()
                 .map(com.sidocinemas.cinema_booking.domain.Seat::getId)
                 .collect(Collectors.toSet());

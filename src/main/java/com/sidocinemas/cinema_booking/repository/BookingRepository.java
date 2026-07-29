@@ -3,11 +3,13 @@ package com.sidocinemas.cinema_booking.repository;
 import com.sidocinemas.cinema_booking.domain.Booking;
 import com.sidocinemas.cinema_booking.enums.BookingStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -17,6 +19,26 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findByCustomerIdOrderByCreatedAtDesc(Long customerId);
 
     List<Booking> findByStatus(BookingStatus status);
+
+    /**
+     * Lấy danh sách Booking HOLD đã hết hạn — dùng để lấy seat IDs trước khi giải phóng Redis.
+     * Sau khi có seat IDs, nên dùng bulkCancelExpiredHoldBookings() để cập nhật DB hiệu quả hơn.
+     */
+    @Query("SELECT b FROM Booking b JOIN FETCH b.tickets t JOIN FETCH t.seat " +
+           "WHERE b.status = :hold AND b.createdAt < :expirationTime")
+    List<Booking> findExpiredHoldBookings(@Param("expirationTime") LocalDateTime expirationTime,
+                                          @Param("hold") BookingStatus hold);
+
+    /**
+     * Bulk UPDATE: Chuyển tất cả booking HOLD hết hạn → CANCELLED trong 1 câu SQL duy nhất.
+     * Hiệu quả hơn N lần save() trong vòng lặp.
+     */
+    @Modifying
+    @Query("UPDATE Booking b SET b.status = :cancelled " +
+           "WHERE b.status = :hold AND b.createdAt < :expirationTime")
+    int bulkCancelExpiredHoldBookings(@Param("expirationTime") LocalDateTime expirationTime,
+                                      @Param("hold") BookingStatus hold,
+                                      @Param("cancelled") BookingStatus cancelled);
 
     // Manager: lấy tất cả booking của một rạp (qua showtime → room → cinema)
     @Query("SELECT b FROM Booking b " +
