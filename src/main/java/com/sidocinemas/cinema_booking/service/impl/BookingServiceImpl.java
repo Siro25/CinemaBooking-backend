@@ -78,15 +78,15 @@ public class BookingServiceImpl implements BookingService {
 
         Long roomId = showtime.getRoom().getId();
 
-        // 1. Validate tất cả ghế tồn tại và thuộc đúng phòng
-        List<Seat> seats = new ArrayList<>();
-        for (Long seatId : request.getSeatIds()) {
-            Seat seat = seatRepository.findById(seatId)
-                    .orElseThrow(() -> new AppException(ErrorCode.SEAT_NOT_FOUND));
+        // 1. Validate tất cả ghế tồn tại và thuộc đúng phòng, kèm Optimistic Lock
+        List<Seat> seats = seatRepository.findByIdsWithOptimisticLock(request.getSeatIds());
+        if (seats.size() != request.getSeatIds().size()) {
+            throw new AppException(ErrorCode.SEAT_NOT_FOUND);
+        }
+        for (Seat seat : seats) {
             if (!seat.getRoom().getId().equals(roomId)) {
                 throw new AppException(ErrorCode.SEAT_NOT_BELONG_TO_ROOM);
             }
-            seats.add(seat);
         }
 
         // 2. Kiểm tra ghế chưa bị đặt (race-condition safe với @Transactional)

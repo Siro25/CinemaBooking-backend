@@ -32,4 +32,7 @@ public class Seat {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id", nullable = false)
     Room room;
+
+    @Version
+    Long version;
 }

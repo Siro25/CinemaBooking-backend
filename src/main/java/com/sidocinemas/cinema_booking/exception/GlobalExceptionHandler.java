@@ -2,11 +2,15 @@ package com.sidocinemas.cinema_booking.exception;
 
 import com.sidocinemas.cinema_booking.dto.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import lombok.extern.slf4j.Slf4j;
+
 @ControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
@@ -42,5 +46,14 @@ public class GlobalExceptionHandler {
         apiResponse.setCode(ErrorCode.INVALID_KEY.getCode());
         apiResponse.setMessage(exception.getFieldError() != null ? exception.getFieldError().getDefaultMessage() : ErrorCode.INVALID_KEY.getMessage());
         return ResponseEntity.status(ErrorCode.INVALID_KEY.getStatusCode()).body(apiResponse);
+    }
+
+    @ExceptionHandler(value = ObjectOptimisticLockingFailureException.class)
+    public ResponseEntity<ApiResponse<Void>> handlingOptimisticLocking(ObjectOptimisticLockingFailureException exception) {
+        log.warn("Optimistic locking failure: {}", exception.getMessage());
+        ApiResponse<Void> apiResponse = new ApiResponse<>();
+        apiResponse.setCode(ErrorCode.SEAT_ALREADY_BOOKED.getCode());
+        apiResponse.setMessage(ErrorCode.SEAT_ALREADY_BOOKED.getMessage());
+        return ResponseEntity.status(ErrorCode.SEAT_ALREADY_BOOKED.getStatusCode()).body(apiResponse);
     }
 }
