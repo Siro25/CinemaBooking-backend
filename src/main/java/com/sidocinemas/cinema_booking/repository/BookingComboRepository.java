@@ -1,0 +1,15 @@
+package com.sidocinemas.cinema_booking.repository;
+
+import com.sidocinemas.cinema_booking.domain.BookingCombo;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface BookingComboRepository extends JpaRepository<BookingCombo, Long> {
+
+    List<BookingCombo> findByBookingId(Long bookingId);
+
+    void deleteByBookingId(Long bookingId);
+}

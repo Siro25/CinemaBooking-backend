@@ -36,7 +36,10 @@ public enum ErrorCode {
     GENRE_ALREADY_EXISTS(1028, "Thể loại phim này đã tồn tại", HttpStatus.BAD_REQUEST),
     SEAT_HELD_BY_ANOTHER_USER(1029, "Ghế đang được người khác giữ chỗ, vui lòng chọn ghế khác", HttpStatus.CONFLICT),
     BOOKING_HOLD_EXPIRED(1030, "Thời gian giữ chỗ đã hết hạn, vui lòng đặt lại", HttpStatus.BAD_REQUEST),
-    MAX_TICKETS_EXCEEDED(1031, "Vượt quá số vé tối đa cho phép trong một lần đặt", HttpStatus.BAD_REQUEST);
+    MAX_TICKETS_EXCEEDED(1031, "Vượt quá số vé tối đa cho phép trong một lần đặt", HttpStatus.BAD_REQUEST),
+    COMBO_NOT_FOUND(1032, "Không tìm thấy combo", HttpStatus.NOT_FOUND),
+    COMBO_NOT_AVAILABLE(1033, "Combo này hiện không có sẵn", HttpStatus.BAD_REQUEST),
+    COMBO_NOT_BELONG_TO_CINEMA(1034, "Combo không thuộc rạp của suất chiếu này", HttpStatus.BAD_REQUEST);
 
     private final int code;
     private final String message;

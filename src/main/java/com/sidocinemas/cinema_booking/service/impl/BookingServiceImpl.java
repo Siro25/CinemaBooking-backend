@@ -2,6 +2,7 @@ package com.sidocinemas.cinema_booking.service.impl;
 
 import com.sidocinemas.cinema_booking.domain.*;
 import com.sidocinemas.cinema_booking.dto.request.BookingRequest;
+import com.sidocinemas.cinema_booking.dto.response.BookingComboResponse;
 import com.sidocinemas.cinema_booking.dto.response.BookingResponse;
 import com.sidocinemas.cinema_booking.dto.response.ManagerReportResponse;
 import com.sidocinemas.cinema_booking.dto.response.MovieRevenueResponse;
@@ -91,7 +92,8 @@ public class BookingServiceImpl implements BookingService {
 
         // 2. Kiểm tra ghế chưa bị đặt (race-condition safe với @Transactional)
         LocalDateTime expirationTime = LocalDateTime.now().minusMinutes(ttlMinutes);
-        boolean anyBooked = ticketRepository.existsBookedSeats(request.getShowtimeId(), request.getSeatIds(), expirationTime);
+        boolean anyBooked = ticketRepository.existsBookedSeats(request.getShowtimeId(), request.getSeatIds(),
+                expirationTime);
         if (anyBooked) {
             throw new AppException(ErrorCode.SEAT_ALREADY_BOOKED);
         }
@@ -221,7 +223,7 @@ public class BookingServiceImpl implements BookingService {
         List<Booking> allBookings = bookingRepository.findByCinemaIdOrderByCreatedAtDesc(cinemaId);
         long confirmed = allBookings.stream().filter(b -> b.getStatus() == BookingStatus.CONFIRMED).count();
         long cancelled = allBookings.stream().filter(b -> b.getStatus() == BookingStatus.CANCELLED).count();
-        long hold      = allBookings.stream().filter(b -> b.getStatus() == BookingStatus.HOLD).count();
+        long hold = allBookings.stream().filter(b -> b.getStatus() == BookingStatus.HOLD).count();
 
         BigDecimal totalRevenue = bookingRepository.sumRevenueByCinema(cinemaId);
 
@@ -290,6 +292,26 @@ public class BookingServiceImpl implements BookingService {
                 })
                 .toList();
 
+        List<BookingComboResponse> comboResponses = booking.getCombos().stream()
+                .map(bc -> {
+                    ComboItem ci = bc.getComboItem();
+                    return BookingComboResponse.builder()
+                            .id(bc.getId())
+                            .comboItemId(ci != null ? ci.getId() : null)
+                            .comboName(ci != null ? ci.getName() : null)
+                            .comboDescription(ci != null ? ci.getDescription() : null)
+                            .comboImageUrl(ci != null ? ci.getImageUrl() : null)
+                            .unitPrice(ci != null ? ci.getPrice() : null)
+                            .quantity(bc.getQuantity())
+                            .subtotal(bc.getSubtotal())
+                            .build();
+                })
+                .toList();
+
+        BigDecimal comboPrice = booking.getCombos().stream()
+                .map(BookingCombo::getSubtotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
         return BookingResponse.builder()
                 .id(booking.getId())
                 .customerId(customer != null ? customer.getId() : null)
@@ -303,8 +325,10 @@ public class BookingServiceImpl implements BookingService {
                 .cinemaName(cinema != null ? cinema.getName() : null)
                 .status(booking.getStatus())
                 .totalPrice(booking.getTotalPrice())
+                .comboPrice(comboPrice)
                 .createdAt(booking.getCreatedAt())
                 .tickets(ticketResponses)
+                .combos(comboResponses)
                 .build();
     }
 }

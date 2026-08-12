@@ -33,8 +33,12 @@ public class BookingResponse {
     // Booking details
     BookingStatus status;
     BigDecimal totalPrice;
+    BigDecimal comboPrice;   // Tổng tiền combo (riêng)
     LocalDateTime createdAt;
 
     // Tickets
     List<TicketResponse> tickets;
+
+    // Combos
+    List<BookingComboResponse> combos;
 }

@@ -56,6 +56,10 @@ public class Booking {
     @Builder.Default
     List<Ticket> tickets = new ArrayList<>();
 
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    List<BookingCombo> combos = new ArrayList<>();
+
     @PrePersist
     protected void onCreate() {
         if (status == null) {
