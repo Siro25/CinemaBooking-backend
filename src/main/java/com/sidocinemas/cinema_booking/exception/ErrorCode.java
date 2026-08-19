@@ -39,7 +39,10 @@ public enum ErrorCode {
     MAX_TICKETS_EXCEEDED(1031, "Vượt quá số vé tối đa cho phép trong một lần đặt", HttpStatus.BAD_REQUEST),
     COMBO_NOT_FOUND(1032, "Không tìm thấy combo", HttpStatus.NOT_FOUND),
     COMBO_NOT_AVAILABLE(1033, "Combo này hiện không có sẵn", HttpStatus.BAD_REQUEST),
-    COMBO_NOT_BELONG_TO_CINEMA(1034, "Combo không thuộc rạp của suất chiếu này", HttpStatus.BAD_REQUEST);
+    COMBO_NOT_BELONG_TO_CINEMA(1034, "Combo không thuộc rạp của suất chiếu này", HttpStatus.BAD_REQUEST),
+    REVIEW_NOT_FOUND(1035, "Không tìm thấy đánh giá", HttpStatus.NOT_FOUND),
+    REVIEW_ALREADY_EXISTS(1036, "Bạn đã đánh giá phim này rồi", HttpStatus.BAD_REQUEST),
+    REVIEW_NOT_ALLOWED(1037, "Bạn cần mua vé và xem phim trước khi đánh giá", HttpStatus.FORBIDDEN);
 
     private final int code;
     private final String message;
