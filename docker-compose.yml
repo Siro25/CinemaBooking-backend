@@ -1,0 +1,106 @@
+services:
+  # -------------------------------------------------------------------
+  # CONTAINER 1: POSTGRESQL DATABASE
+  # -------------------------------------------------------------------
+  postgres-db:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: cinema-booking
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: '123456'
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d cinema-booking" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - cinema-network
+
+  # -------------------------------------------------------------------
+  # CONTAINER 2: REDIS CACHE (Quản lý Seat Hold & Session)
+  # -------------------------------------------------------------------
+  redis-cache:
+    image: redis:7-alpine
+    restart: always
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cinema-network
+
+  # -------------------------------------------------------------------
+  # CONTAINER 3: BACKEND (SPRING BOOT / JAVA 21)
+  # -------------------------------------------------------------------
+  cinema-backend:
+    image: nillliudiu/cinema-backend:latest
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: postgres-db
+      DB_PORT: 5432
+      DB_NAME: cinema-booking
+      DB_USER: postgres
+      DB_PASSWORD: '123456'
+      REDIS_HOST: redis-cache
+      REDIS_PORT: 6379
+      # Đảm bảo data.sql được chạy khi khởi động
+      SPRING_SQL_INIT_MODE: always
+      # JVM options: giảm bộ nhớ tối đa, thêm DNS TTL ngắn cho Docker
+      JAVA_OPTS: "-XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/./urandom"
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+      redis-cache:
+        condition: service_healthy
+    healthcheck:
+      # Kiểm tra port 8080 đã mở chưa (Spring Boot đã khởi động xong)
+      test: [ "CMD-SHELL", "nc -z localhost 8080 || exit 1" ]
+      interval: 15s
+      timeout: 10s
+      retries: 8
+      start_period: 90s
+    networks:
+      - cinema-network
+
+  # -------------------------------------------------------------------
+  # CONTAINER 4: FRONTEND (REACT VITE + NGINX REVERSE PROXY)
+  # -------------------------------------------------------------------
+  cinema-frontend:
+    image: nillliudiu/cinema-frontend:latest
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      cinema-backend:
+        condition: service_healthy
+    networks:
+      - cinema-network
+
+# -------------------------------------------------------------------
+# DỮ LIỆU BỀN VỮNG (PERSISTENT VOLUMES)
+# -------------------------------------------------------------------
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+# -------------------------------------------------------------------
+# MẠNG NỘI BỘ DOCKER (ISOLATED NETWORK)
+# -------------------------------------------------------------------
+networks:
+  cinema-network:
+    driver: bridge

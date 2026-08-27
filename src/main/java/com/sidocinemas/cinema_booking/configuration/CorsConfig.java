@@ -1,5 +1,6 @@
 package com.sidocinemas.cinema_booking.configuration;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -7,19 +8,22 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 public class CorsConfig {
+
+    // Đọc từ biến môi trường ALLOWED_ORIGINS, mặc định cho phép localhost khi dev
+    @Value("${ALLOWED_ORIGINS:http://localhost,http://localhost:5173,http://localhost:3000}")
+    private String allowedOriginsStr;
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Allow frontend origins
-        configuration.setAllowedOriginPatterns(Arrays.asList(
-                "http://localhost:*",
-                "http://127.0.0.1:*",
-                "https://localhost:*"));
+        // Tách chuỗi ALLOWED_ORIGINS thành danh sách (phân cách bằng dấu phẩy)
+        List<String> allowedOrigins = Arrays.asList(allowedOriginsStr.split(","));
+        configuration.setAllowedOriginPatterns(allowedOrigins);
 
         // Allow specific methods
         configuration.setAllowedMethods(Arrays.asList(
