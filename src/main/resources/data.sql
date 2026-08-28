@@ -56,112 +56,112 @@ INSERT INTO movies (title, description, duration, genre, age_rating, poster_url,
 ('Deadpool & Wolverine', 
 'Wade Wilson sống cuộc sống yên bình khi Logan thuyết phục anh ta tham gia vào nhiệm vụ cứu thế giới của mình. Họ phải đối mặt với kẻ thù chung trong cuộc phiêu lưu đầy hành động và hài hước.',
 128, 'Hành Động, Hài Hước', 'T16',
-'https://image.tmdb.org/t/p/w500/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg',
+'/assets/movie/059593b6-88d8-429e-abea-c66b0314c35a.jpg',
 'NOW_SHOWING', NOW(), NOW()),
 
 -- 2. Animation / Marvel (Upcoming)
 ('Spider-Man: Beyond the Spider-Verse', 
 'Miles Morales tiếp tục cuộc phiêu lưu đa vũ trụ với những Spider-People mới. Một câu chuyện hoành tráng về sự trưởng thành và trách nhiệm với những pha hành động đầy màu sắc.',
 140, 'Hoạt Hình, Hành Động', 'T13',
-'https://image.tmdb.org/t/p/w500/5cAuJOfd7NrVFA93e2tdGTPzEAF.jpg',
+'/assets/movie/27a49900-1ec6-4f56-82c0-40d1c44a9e21.jpg',
 'COMING_SOON', NOW(), NOW()),
 
 -- 3. Disney Animation
 ('Inside Out 2', 
 'Riley giờ đã là một thiếu niên và những cảm xúc mới xuất hiện trong đầu cô. Joy, Sadness và những cảm xúc quen thuộc phải học cách làm việc với Anxiety, Envy và những người bạn mới.',
 96, 'Hoạt Hình, Gia Đình, Tâm Lý', 'P',
-'https://image.tmdb.org/t/p/w500/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg',
+'/assets/movie/299f9969-d455-41a0-808e-5ea2c4fc1001.jpg',
 'NOW_SHOWING', NOW(), NOW()),
 
 -- 4. Disney Animation
 ('Moana 2', 
 'Moana bắt đầu hành trình mới đầy mạo hiểm cùng thủy thủ đoàn đặc biệt sau khi nhận được lời kêu gọi từ các tổ tiên tìm đường của mình.',
 100, 'Hoạt Hình, Phiêu Lưu, Gia Đình', 'P',
-'https://image.tmdb.org/t/p/w500/4YZpsylmjHbqeWzjKpUEF8gcLNW.jpg',
+'/assets/movie/4612a3d9-1544-4589-af66-9006c98f0a72.jpg',
 'NOW_SHOWING', NOW(), NOW()),
 
 -- 5. Musical / Fantasy
 ('Wicked', 
 'Câu chuyện chưa được kể về các phù thủy xứ Oz. Elphaba, một cô gái trẻ bị hiểu lầm vì màu da xanh lá bất thường, và Glinda, một cô gái khao khát được yêu mến.',
 160, 'Ca Nhạc, Kỳ Ảo - Thần Thoại', 'T13',
-'https://image.tmdb.org/t/p/w500/c5Tqxeo1UpBvnAc3csUm7j3hlQl.jpg',
+'/assets/movie/57719151-f0de-457d-a776-0adb6e661aae.jpg',
 'NOW_SHOWING', NOW(), NOW()),
 
 -- 6. Historical Epic / Action
 ('Gladiator II', 
 'Nhiều năm sau cái chết của Maximus, Lucius - cháu trai của Marcus Aurelius - buộc phải bước vào Đấu trường La Mã khi quê hương anh bị thống trị bởi các hoàng đế tàn bạo.',
 148, 'Hành Động, Lịch Sử - Sử Thi', 'T18',
-'https://image.tmdb.org/t/p/w500/2cxhvwyEwRlysAmRH4iodkvo0z5.jpg',
+'/assets/movie/5ab79b99-3df7-40c1-a771-31a9a08a7744.jpg',
 'NOW_SHOWING', NOW(), NOW()),
 
 -- 7. Horror
 ('Smile 2', 
 'Sau những sự kiện kinh hoàng từ phần đầu, một ngôi sao nhạc Pop hàng đầu bắt đầu trải qua những hiện tượng đáng sợ không thể giải thích khi bắt đầu tour diễn toàn cầu.',
 127, 'Kinh Dị, Bí Ẩn - Trinh Thám', 'T18',
-'https://image.tmdb.org/t/p/w500/ht8Uv9QPv9y7K0RvUyJIaXOZTfd.jpg',
+'/assets/movie/5db2b56b-db46-47b8-90e2-e9cd41f68caa.jpg',
 'NOW_SHOWING', NOW(), NOW()),
 
 -- 8. Sci-Fi Epic (Upcoming)
 ('Avatar 3: Fire and Ash', 
 'Jake Sully và gia đình tiếp tục cuộc phiêu lưu trên hành tinh Pandora, khám phá bộ tộc Tro Tàn nguy hiểm và đối mặt những thử thách nghiệt ngã hơn.',
 190, 'Khoa Học Viễn Tưởng, Phiêu Lưu', 'T13',
-'https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg',
+'/assets/movie/910a94db-6d8c-43d2-805f-b7b8ae675f0c.jpg',
 'COMING_SOON', NOW(), NOW()),
 
 -- 9. Crime / Action (Upcoming)
 ('The Batman 2', 
 'Người Dơi tiếp tục hành trình thực thi lý tưởng tại thành phố Gotham đen tối, đối mặt với những âm mưu tàn độc mới đe dọa sự tồn vong của thành phố.',
 155, 'Tội Phạm, Hành Động', 'T16',
-'https://image.tmdb.org/t/p/w500/b0PlHKk2uTxlaLfKz8HbVjmdVl8.jpg',
+'/assets/movie/a97eb03e-d8a6-4015-bc9b-797d4b63cb6c.jpeg',
 'COMING_SOON', NOW(), NOW()),
 
 -- 10. Vietnamese Movie 1
 ('Mai', 
 'Câu chuyện về người phụ nữ tên Mai và cuộc đời đầy thăng trầm của cô. Một tác phẩm điện ảnh Việt Nam sâu sắc về tình yêu, gia đình và khát vọng sống.',
 131, 'Điện Ảnh Việt, Tâm Lý, Tình Cảm', 'T16',
-'https://image.tmdb.org/t/p/w500/z0zo3V1s6j75uV3fXz2y29b7k2d.jpg',
+'/assets/movie/af41e012-d0bc-491e-bbf9-ceb24497c54a.jpg',
 'NOW_SHOWING', NOW(), NOW()),
 
 -- 11. Vietnamese Movie 2
 ('Đào, Phở và Piano', 
 'Bộ phim lấy bối cảnh Hà Nội mùa đông 1946, kể về tình yêu đẹp đẽ, lòng yêu nước và tinh thần kiên cường của người dân Hà thành trong khói lửa chiến tranh.',
 110, 'Điện Ảnh Việt, Lịch Sử - Sử Thi, Tình Cảm', 'T13',
-'https://image.tmdb.org/t/p/w500/3qZ9jY8V6u1aZ07y2x9b7k2d1e2.jpg',
+'/assets/movie/b552eeea-4fb8-477d-b0fc-bdf716a3ede5.jpg',
 'NOW_SHOWING', NOW(), NOW()),
 
 -- 12. Sci-Fi Blockbuster
 ('Dune: Part Two', 
 'Paul Atreides hợp lực cùng Chani và người Fremen để trả thù những kẻ đã hủy hoại gia đình anh, đối mặt với lựa chọn giữa tình yêu và số phận vũ trụ.',
 166, 'Khoa Học Viễn Tưởng, Phiêu Lưu', 'T13',
-'https://image.tmdb.org/t/p/w500/1pdfLPoL2VFiLyoWjYhBLvfYYh.jpg',
+'/assets/movie/c52746d7-3bdd-4931-9060-e091618af82a.jpg',
 'NOW_SHOWING', NOW(), NOW()),
 
 -- 13. Anime / Mystery
 ('Detective Conan: The Million-dollar Pentagram', 
 'Siêu đạo chích Kid nhắm đến thanh bảo kiếm tại Hakodate. Conan và các bạn bước vào trận chiến suy luận gay cấn liên quan đến kho báu lịch sử.',
 111, 'Anime, Bí Ẩn - Trinh Thám', 'P',
-'https://image.tmdb.org/t/p/w500/rFyWV4xWfXw3f8Z0e6Z5Xw2y3z4.jpg',
+'/assets/movie/d1d0a8bd-c0fd-4259-896b-1ac2948c0214.jpg',
 'NOW_SHOWING', NOW(), NOW()),
 
 -- 14. Vietnamese Movie 3
 ('Lật Mặt 7: Một Điều Ước', 
 'Bộ phim gia đình xúc động về bà Hai và 5 người con trưởng thành. Khi biến cố xảy ra, tình thân và sự hiếu thảo được thử thách một cách chân thực nhất.',
 138, 'Điện Ảnh Việt, Gia Đình, Tâm Lý', 'P',
-'https://image.tmdb.org/t/p/w500/lm7wish2024poster.jpg',
+'/assets/movie/e27e01f6-080c-4d1c-bfc0-02f0db76cb08.jpg',
 'NOW_SHOWING', NOW(), NOW()),
 
 -- 15. Action / Monster
 ('Godzilla x Kong: The New Empire', 
 'Kong và Godzilla phải gạt bỏ mâu thuẫn để hợp sức chống lại một mối đe dọa khổng lồ mới đang ẩn nấp trong lòng Trái Đất.',
 115, 'Hành Động, Khoa Học Viễn Tưởng', 'T13',
-'https://image.tmdb.org/t/p/w500/xOMo8BRK7PfcJv9JCnx7s52SIYz.jpg',
+'/assets/movie/e71a4dfe-3813-49fe-a183-38cea89bdae4.jpg',
 'NOW_SHOWING', NOW(), NOW()),
 
 -- 16. Animation / Comedy
 ('Kung Fu Panda 4', 
 'Po chuẩn bị trở thành Thủ Lĩnh Sống Của Thung Lũng Bình Yên nhưng phải tìm và huấn luyện một Chiến Binh Rồng mới để đối đầu với Phù Thủy Tắc Kè Tè.',
 94, 'Hoạt Hình, Hài Hước, Hành Động', 'P',
-'https://image.tmdb.org/t/p/w500/kDp11GlRQgY2j2mUtLw2aW9aObE.jpg',
+'/assets/movie/fee5a3c1-19ce-47d9-8d70-88504f0b895a.jpg',
 'NOW_SHOWING', NOW(), NOW());
 
 -- ==============================================
