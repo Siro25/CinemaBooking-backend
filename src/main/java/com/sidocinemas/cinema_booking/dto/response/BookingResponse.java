@@ -35,6 +35,7 @@ public class BookingResponse {
     BigDecimal totalPrice;
     BigDecimal comboPrice;   // Tổng tiền combo (riêng)
     LocalDateTime createdAt;
+    Long expiresAtEpoch;     // Epoch milliseconds (UTC) khi booking hết hạn — dùng cho countdown FE
 
     // Tickets
     List<TicketResponse> tickets;

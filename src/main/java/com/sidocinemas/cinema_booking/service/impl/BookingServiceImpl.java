@@ -24,7 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -312,6 +314,13 @@ public class BookingServiceImpl implements BookingService {
                 .map(BookingCombo::getSubtotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
+        // Tính expiresAtEpoch: createdAt + ttlMinutes, dưới dạng epoch ms (UTC)
+        Long expiresAtEpoch = null;
+        if (booking.getCreatedAt() != null) {
+            Instant createdInstant = booking.getCreatedAt().toInstant(ZoneOffset.UTC);
+            expiresAtEpoch = createdInstant.plusSeconds(ttlMinutes * 60).toEpochMilli();
+        }
+
         return BookingResponse.builder()
                 .id(booking.getId())
                 .customerId(customer != null ? customer.getId() : null)
@@ -327,6 +336,7 @@ public class BookingServiceImpl implements BookingService {
                 .totalPrice(booking.getTotalPrice())
                 .comboPrice(comboPrice)
                 .createdAt(booking.getCreatedAt())
+                .expiresAtEpoch(expiresAtEpoch)
                 .tickets(ticketResponses)
                 .combos(comboResponses)
                 .build();

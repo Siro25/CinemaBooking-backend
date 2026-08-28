@@ -20,7 +20,7 @@ public class CinemaBookingApplication {
 	// set time theo utc để đồng bộ với render
 	@jakarta.annotation.PostConstruct
 	public void init() {
-		java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
+		java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("UTC"));
 	}
 
 	@Bean
