@@ -13,8 +13,8 @@ import java.util.List;
 @Configuration
 public class CorsConfig {
 
-    // Đọc từ biến môi trường ALLOWED_ORIGINS, mặc định cho phép localhost khi dev
-    @Value("${ALLOWED_ORIGINS:http://localhost,http://localhost:5173,http://localhost:3000}")
+    // Đọc từ biến môi trường ALLOWED_ORIGINS, mặc định cho phép localhost và các domain của vercel khi dev
+    @Value("${ALLOWED_ORIGINS:http://localhost,http://localhost:5173,http://localhost:3000,https://*.vercel.app}")
     private String allowedOriginsStr;
 
     @Bean
