@@ -10,19 +10,11 @@ import java.util.List;
 
 public interface ComboService {
 
-    // ── Public / Customer ────────────────────────────────────────────────────
-
-    /** Lấy danh sách combo đang available của rạp (public endpoint) */
     List<ComboItemResponse> getAvailableComboByCinema(Long cinemaId);
 
-    /**
-     * Customer cập nhật combo cho booking đang ở trạng thái HOLD.
-     * Ghi đè toàn bộ (replace), không phải append.
-     * Trả về BookingResponse đã cập nhật totalPrice.
-     */
     BookingResponse updateBookingCombos(Long bookingId, Long customerId, BookingComboRequest request);
 
-    // ── Manager CRUD ─────────────────────────────────────────────────────────
+    // Manager CRUD
 
     List<ComboItemResponse> getAllComboByCinema(Long cinemaId);
 

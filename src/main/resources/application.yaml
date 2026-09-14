@@ -32,6 +32,5 @@ spring:
       timeout: 2000ms
       connect-timeout: 2000ms
 
-# Seat hold configuration
 seat-hold:
   ttl-minutes: 10

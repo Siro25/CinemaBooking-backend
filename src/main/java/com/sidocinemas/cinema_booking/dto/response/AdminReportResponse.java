@@ -5,9 +5,6 @@ import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 
-/**
- * Báo cáo tổng hợp toàn hệ thống – dùng cho Admin Report & Dashboard.
- */
 @Data
 @Builder
 @NoArgsConstructor

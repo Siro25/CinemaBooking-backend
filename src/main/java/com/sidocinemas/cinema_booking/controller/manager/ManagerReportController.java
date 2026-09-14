@@ -11,9 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * MANAGER: Xem báo cáo doanh thu rạp của mình.
- */
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/manager/reports")

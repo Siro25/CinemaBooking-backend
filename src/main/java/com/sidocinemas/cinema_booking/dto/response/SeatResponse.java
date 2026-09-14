@@ -16,6 +16,5 @@ public class SeatResponse {
     String row;
     Integer number;
     SeatType type;
-    // Trạng thái available sẽ được set khi query theo showtime
     Boolean available;
 }

@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * ADMIN: Quản lý rạp phim.
- */
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/admin/cinemas")

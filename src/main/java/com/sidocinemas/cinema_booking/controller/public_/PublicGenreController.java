@@ -8,10 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Public Genre Controller - Không cần xác thực
- * Endpoint: /api/v1/public/genres
- */
 @RestController
 @RequestMapping("/api/v1/public/genres")
 @RequiredArgsConstructor

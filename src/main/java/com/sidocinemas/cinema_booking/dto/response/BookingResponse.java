@@ -17,12 +17,11 @@ public class BookingResponse {
 
     Long id;
 
-    // Customer info
     Long customerId;
     String customerName;
     String customerEmail;
 
-    // Showtime info
+    // Showtime
     Long showtimeId;
     String movieTitle;
     LocalDateTime startTime;
@@ -33,9 +32,9 @@ public class BookingResponse {
     // Booking details
     BookingStatus status;
     BigDecimal totalPrice;
-    BigDecimal comboPrice;   // Tổng tiền combo (riêng)
+    BigDecimal comboPrice;
     LocalDateTime createdAt;
-    Long expiresAtEpoch;     // Epoch milliseconds (UTC) khi booking hết hạn — dùng cho countdown FE
+    Long expiresAtEpoch; // Epoch milliseconds (UTC) khi booking hết hạn — dùng cho countdown FE
 
     // Tickets
     List<TicketResponse> tickets;

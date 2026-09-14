@@ -17,9 +17,7 @@ public interface PaymentService {
 
     List<PaymentResponse> getAllPayments();
 
-    /** Lấy tất cả thanh toán của một customer (chỉ trả về của chính họ) */
     List<PaymentResponse> getPaymentsByCustomer(Long customerId);
 
-    /** Lấy thanh toán theo id nhưng chỉ nếu thuộc về customer đó */
     PaymentResponse getMyPaymentById(Long id, Long customerId);
 }

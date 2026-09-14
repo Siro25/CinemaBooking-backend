@@ -10,9 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * ADMIN: Xem báo cáo tổng hợp toàn hệ thống.
- */
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/admin/reports")

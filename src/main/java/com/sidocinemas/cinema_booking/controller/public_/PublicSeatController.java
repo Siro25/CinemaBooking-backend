@@ -9,10 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Public Seat Controller - Xem thông tin ghế
- * Endpoint: /api/v1/public/seats
- */
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/public/seats")
@@ -21,9 +17,6 @@ public class PublicSeatController {
 
     private final SeatService seatService;
 
-    /**
-     * Xem danh sách ghế theo phòng
-     */
     @GetMapping("/room/{roomId}")
     public ApiResponse<List<SeatResponse>> getSeatsByRoom(@PathVariable Long roomId) {
         log.info("Public: Getting seats for roomId={}", roomId);
@@ -32,10 +25,6 @@ public class PublicSeatController {
                 .build();
     }
 
-    /**
-     * Lấy danh sách ghế kèm trạng thái available/booked theo suất chiếu.
-     * Khách hàng dùng endpoint này để xem ghế trống khi đặt vé.
-     */
     @GetMapping("/showtime/{showtimeId}")
     public ApiResponse<List<SeatResponse>> getSeatsByShowtime(@PathVariable Long showtimeId) {
         log.info("Public: Getting seat availability for showtimeId={}", showtimeId);
@@ -44,9 +33,6 @@ public class PublicSeatController {
                 .build();
     }
 
-    /**
-     * Xem chi tiết một ghế
-     */
     @GetMapping("/{id}")
     public ApiResponse<SeatResponse> getSeatById(@PathVariable Long id) {
         log.info("Public: Getting seat id={}", id);

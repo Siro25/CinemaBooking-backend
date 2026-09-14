@@ -38,14 +38,12 @@ public class BookingCleanupService {
         @Value("${seat-hold.ttl-minutes:10}")
         private long ttlMinutes;
 
-        // fixedDelay: chờ lần trước kết thúc mới đếm 1 phút tiếp
+        // fixedDelay
         @Scheduled(fixedDelayString = "PT1M")
         @Transactional
         public void cleanupExpiredHoldBookings() {
                 LocalDateTime expirationTime = LocalDateTime.now().minusMinutes(ttlMinutes);
 
-                // Bước 1: Lấy expired bookings với JOIN FETCH để load tickets+seats sẵn (tránh
-                // N+1)
                 List<Booking> expiredBookings = bookingRepository
                                 .findExpiredHoldBookings(expirationTime, BookingStatus.HOLD);
 
@@ -54,8 +52,7 @@ public class BookingCleanupService {
 
                 log.info("[BookingCleanup] Found {} expired HOLD booking(s) to cancel.", expiredBookings.size());
 
-                // Bước 2: Giải phóng Redis cho mỗi booking (phòng trường hợp Redis TTL chưa
-                // expire)
+                // Giải phóng Redis cho mỗi booking
                 for (Booking booking : expiredBookings) {
                         List<Long> seatIds = booking.getTickets().stream()
                                         .map(t -> t.getSeat().getId())
@@ -63,11 +60,11 @@ public class BookingCleanupService {
                         seatHoldService.releaseSeats(booking.getShowtime().getId(), seatIds);
                 }
 
-                // Bước 3: Bulk UPDATE bookings HOLD → CANCELLED (1 SQL thay vì N save())
+                // Bulk UPDATE bookings HOLD → CANCELLED
                 int cancelledCount = bookingRepository.bulkCancelExpiredHoldBookings(
                                 expirationTime, BookingStatus.HOLD, BookingStatus.CANCELLED);
 
-                // Bước 4: Bulk UPDATE payments PENDING → FAILED (1 SQL thay vì N save())
+                // Bulk UPDATE payments PENDING → FAILED
                 List<Long> bookingIds = expiredBookings.stream().map(Booking::getId).toList();
                 int failedPayments = paymentRepository.bulkFailPendingPayments(
                                 bookingIds, PaymentStatus.FAILED, PaymentStatus.PENDING);

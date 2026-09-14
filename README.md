@@ -31,11 +31,13 @@ Sau khi lệnh chạy xong (hiển thị trạng thái `Started` cho tất cả 
 - **Hệ thống API (Dành cho Dev kiểm tra):** [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
 
 ### 🔑 Các tài khoản test có sẵn:
-*(Mật khẩu chung cho tất cả các tài khoản dưới đây là: `123456`)*
+*(Mật khẩu chung cho tất cả các tài khoản dưới đây là: `password`)*
 
 - **Tài khoản Admin (Toàn quyền hệ thống):** `admin@sidocinemas.com`
-- **Tài khoản Quản lý Rạp (Hà Nội):** `manager.hanoi@sidocinemas.com`
-- **Tài khoản Khách hàng:** `customer1@example.com`
+- **Tài khoản Quản lý Rạp 1:** `manager.hanoi@sidocinemas.com`
+- **Tài khoản Quản lý Rạp 2:** `manager.hcm@sidocinemas.com`
+- **Tài khoản Quản lý Rạp 3:** `manager.danang@sidocinemas.com`
+- **Tài khoản Khách hàng:** `customer1@example.com` (1-5)
 
 ---
 

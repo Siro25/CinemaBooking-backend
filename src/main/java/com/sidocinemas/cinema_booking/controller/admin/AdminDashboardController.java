@@ -10,9 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * ADMIN: Xem tổng quan dashboard.
- */
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/admin/dashboard")

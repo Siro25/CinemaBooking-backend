@@ -13,10 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Admin Genre Controller - Quản lý thể loại phim
- * Endpoint: /api/v1/admin/genres
- */
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/admin/genres")

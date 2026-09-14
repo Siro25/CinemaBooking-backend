@@ -11,9 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * MANAGER: Quản lý đặt vé của rạp mình.
- */
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/manager/bookings")
@@ -36,7 +33,6 @@ public class ManagerBookingController {
     @PatchMapping("/{id}/confirm")
     public ApiResponse<BookingResponse> confirmBooking(@PathVariable Long id) {
         log.info("[MANAGER] Confirming booking id={}", id);
-        // Lưu ý: Thực tế nên kiểm tra booking id có thuộc cinemaId của manager không
         return ApiResponse.<BookingResponse>builder()
                 .data(bookingService.confirmBooking(id))
                 .message("Xác nhận đặt vé thành công")

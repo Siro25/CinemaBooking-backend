@@ -8,10 +8,7 @@ import java.util.List;
 
 @Repository
 public interface ComboItemRepository extends JpaRepository<ComboItem, Long> {
-
-    /** Lấy combo theo rạp, chỉ những combo đang available */
     List<ComboItem> findByCinemaIdAndIsAvailableTrue(Long cinemaId);
 
-    /** Lấy tất cả combo theo rạp (cho Manager quản lý) */
     List<ComboItem> findByCinemaId(Long cinemaId);
 }

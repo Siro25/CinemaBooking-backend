@@ -17,7 +17,6 @@ public class CinemaBookingApplication {
 		SpringApplication.run(CinemaBookingApplication.class, args);
 	}
 
-	// set time theo utc để đồng bộ với render
 	@jakarta.annotation.PostConstruct
 	public void init() {
 		java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("UTC"));

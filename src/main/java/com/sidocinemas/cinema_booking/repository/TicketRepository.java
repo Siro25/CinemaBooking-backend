@@ -14,10 +14,6 @@ import java.util.List;
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
-        /**
-         * Lấy danh sách ghế đang bị chiếm hợp lệ dùng để hiển thị sơ đồ ghế.
-         * Dùng enum parameter thay string literal để tránh lỗi typo lúc runtime.
-         */
         @Query("SELECT t.seat FROM Ticket t " +
                         "WHERE t.booking.showtime.id = :showtimeId " +
                         "AND (t.booking.status = :confirmed " +
@@ -28,16 +24,11 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
                         @Param("confirmed") BookingStatus confirmed,
                         @Param("hold") BookingStatus hold);
 
-        /** callers không cần biết enum constants. */
         default List<Seat> findBookedSeatsByShowtimeId(Long showtimeId, LocalDateTime expirationTime) {
                 return findBookedSeatsByShowtimeIdInternal(
                                 showtimeId, expirationTime, BookingStatus.CONFIRMED, BookingStatus.HOLD);
         }
 
-        /**
-         * Kiểm tra nhanh xem có ghế nào trong danh sách đang bị giữ hợp lệ không.
-         * CASE WHEN là workaround vì JPQL không hỗ trợ EXISTS subquery trực tiếp.
-         */
         @Query("SELECT CASE WHEN COUNT(t) > 0 THEN true ELSE false END " +
                         "FROM Ticket t " +
                         "WHERE t.booking.showtime.id = :showtimeId " +
@@ -51,7 +42,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
                         @Param("confirmed") BookingStatus confirmed,
                         @Param("hold") BookingStatus hold);
 
-        /** Convenience method — callers không cần biết enum constants. */
         default boolean existsBookedSeats(Long showtimeId, List<Long> seatIds, LocalDateTime expirationTime) {
                 return existsBookedSeatsInternal(
                                 showtimeId, seatIds, expirationTime, BookingStatus.CONFIRMED, BookingStatus.HOLD);

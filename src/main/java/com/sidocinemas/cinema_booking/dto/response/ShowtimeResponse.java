@@ -15,12 +15,12 @@ public class ShowtimeResponse {
 
     Long id;
 
-    // Movie info
+    // Movie
     Long movieId;
     String movieTitle;
     Integer movieDuration;
 
-    // Room info
+    // Room
     Long roomId;
     String roomNumber;
     Long cinemaId;

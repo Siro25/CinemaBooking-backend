@@ -11,10 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * Customer Profile Controller - Quản lý thông tin cá nhân
- * Endpoint: /api/v1/customer/profile
- */
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/customer/profile")
@@ -23,9 +19,6 @@ public class CustomerProfileController {
 
     private final UserService userService;
 
-    /**
-     * Xem thông tin profile của mình
-     */
     @GetMapping
     @PreAuthorize("hasRole('CUSTOMER')")
     public ApiResponse<UserResponse> getMyProfile() {
@@ -36,9 +29,6 @@ public class CustomerProfileController {
                 .build();
     }
 
-    /**
-     * Cập nhật thông tin profile
-     */
     @PutMapping
     @PreAuthorize("hasRole('CUSTOMER')")
     public ApiResponse<UserResponse> updateProfile(@Valid @RequestBody UserUpdateRequest request) {

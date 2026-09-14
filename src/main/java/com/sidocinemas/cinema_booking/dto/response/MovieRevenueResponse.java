@@ -5,9 +5,6 @@ import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 
-/**
- * Doanh thu theo từng phim (dùng trong Manager Report).
- */
 @Data
 @Builder
 @NoArgsConstructor

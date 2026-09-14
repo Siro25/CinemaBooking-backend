@@ -34,8 +34,6 @@ public class ComboServiceImpl implements ComboService {
     CinemaRepository cinemaRepository;
     TicketRepository ticketRepository;
 
-    // ── Public / Customer ───────────────────────────────────────────────────
-
     @Override
     @Transactional(readOnly = true)
     public List<ComboItemResponse> getAvailableComboByCinema(Long cinemaId) {
@@ -51,19 +49,16 @@ public class ComboServiceImpl implements ComboService {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_FOUND));
 
-        // Kiểm tra booking thuộc customer này
         if (!booking.getCustomer().getId().equals(customerId)) {
             throw new AppException(ErrorCode.ACCESS_DENIED);
         }
 
-        // Chỉ cho phép cập nhật khi booking đang HOLD
         if (booking.getStatus() != BookingStatus.HOLD) {
             throw new AppException(ErrorCode.BOOKING_ALREADY_CONFIRMED);
         }
 
         Long cinemaId = booking.getShowtime().getRoom().getCinema().getId();
 
-        // Xoá combo cũ (replace all)
         bookingComboRepository.deleteByBookingId(bookingId);
         booking.getCombos().clear();
 
@@ -71,7 +66,8 @@ public class ComboServiceImpl implements ComboService {
 
         if (request != null && request.getItems() != null) {
             for (BookingComboRequest.ComboSelection sel : request.getItems()) {
-                if (sel.getQuantity() == null || sel.getQuantity() <= 0) continue;
+                if (sel.getQuantity() == null || sel.getQuantity() <= 0)
+                    continue;
 
                 ComboItem comboItem = comboItemRepository.findById(sel.getComboItemId())
                         .orElseThrow(() -> new AppException(ErrorCode.COMBO_NOT_FOUND));
@@ -80,7 +76,6 @@ public class ComboServiceImpl implements ComboService {
                     throw new AppException(ErrorCode.COMBO_NOT_AVAILABLE);
                 }
 
-                // Kiểm tra combo thuộc rạp của booking
                 if (!comboItem.getCinema().getId().equals(cinemaId)) {
                     throw new AppException(ErrorCode.COMBO_NOT_BELONG_TO_CINEMA);
                 }
@@ -98,7 +93,6 @@ public class ComboServiceImpl implements ComboService {
             }
         }
 
-        // Tính lại tổng = giá vé cũ (ticketPrice) + combo mới
         BigDecimal ticketTotal = booking.getTickets().stream()
                 .map(Ticket::getPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);

@@ -28,7 +28,6 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    // Quan hệ 1-1 với Booking
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "booking_id", nullable = false, unique = true)
     Booking booking;

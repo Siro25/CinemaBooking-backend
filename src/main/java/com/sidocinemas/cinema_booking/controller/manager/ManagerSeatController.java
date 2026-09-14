@@ -19,10 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Manager Seat Controller - Quản lý ghế cho rạp của Manager
- * Endpoint: /api/v1/manager/seats
- */
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/manager/seats")
@@ -35,9 +31,6 @@ public class ManagerSeatController {
     private final RoomRepository roomRepository;
     private final SeatRepository seatRepository;
 
-    /**
-     * Lấy danh sách ghế của 1 phòng
-     */
     @GetMapping("/room/{roomId}")
     public ApiResponse<List<SeatResponse>> getSeatsByRoom(@PathVariable Long roomId) {
         verifyRoomBelongsToManager(roomId);
@@ -47,9 +40,6 @@ public class ManagerSeatController {
                 .build();
     }
 
-    /**
-     * Tạo ghế mới
-     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<SeatResponse> createSeat(@Valid @RequestBody SeatRequest request) {
@@ -62,12 +52,9 @@ public class ManagerSeatController {
                 .build();
     }
 
-    /**
-     * Cập nhật ghế
-     */
     @PutMapping("/{id}")
     public ApiResponse<SeatResponse> updateSeat(@PathVariable Long id,
-                                                @Valid @RequestBody SeatRequest request) {
+            @Valid @RequestBody SeatRequest request) {
         verifySeatBelongsToManager(id);
         verifyRoomBelongsToManager(request.getRoomId());
         log.info("[MANAGER] Updating seat id={}", id);
@@ -77,9 +64,6 @@ public class ManagerSeatController {
                 .build();
     }
 
-    /**
-     * Xóa ghế
-     */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteSeat(@PathVariable Long id) {

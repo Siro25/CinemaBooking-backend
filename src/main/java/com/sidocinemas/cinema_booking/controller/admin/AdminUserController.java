@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * ADMIN: Quản lý người dùng.
- */
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/admin/users")

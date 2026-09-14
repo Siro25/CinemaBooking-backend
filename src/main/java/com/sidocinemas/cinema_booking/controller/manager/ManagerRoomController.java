@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * MANAGER: Quản lý phòng chiếu của rạp mình.
- */
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/manager/rooms")

@@ -10,10 +10,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * Public Auth Controller - Authentication endpoints
- * Endpoint: /api/v1/public/auth
- */
 @RestController
 @RequestMapping("/api/v1/public/auth")
 @RequiredArgsConstructor
@@ -21,9 +17,6 @@ public class PublicAuthController {
 
     private final AuthService authService;
 
-    /**
-     * Đăng nhập
-     */
     @PostMapping("/login")
     public ApiResponse<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         AuthResponse response = authService.login(request);
@@ -33,9 +26,6 @@ public class PublicAuthController {
                 .build();
     }
 
-    /**
-     * Đăng ký tài khoản mới
-     */
     @PostMapping("/register")
     public ApiResponse<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         AuthResponse response = authService.register(request);
@@ -45,9 +35,6 @@ public class PublicAuthController {
                 .build();
     }
 
-    /**
-     * Refresh Token
-     */
     @PostMapping("/refresh")
     public ApiResponse<AuthResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
         AuthResponse response = authService.refreshToken(request);

@@ -12,10 +12,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Expose the assets directory so that the uploaded files can be accessed via URL
+        // Expose the assets directory
         Path assetUploadDir = Paths.get("assets");
         String assetUploadPath = assetUploadDir.toFile().getAbsolutePath();
-        
+
         registry.addResourceHandler("/assets/**")
                 .addResourceLocations("file:/" + assetUploadPath + "/");
     }

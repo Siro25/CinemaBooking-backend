@@ -18,10 +18,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByEmail(String email);
 
-    // Admin: tìm user theo role
     List<User> findByRole(Role role);
 
-    // Admin dashboard: đếm số user theo role
     long countByRole(Role role);
 
     @Modifying
@@ -32,4 +30,3 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("UPDATE User u SET u.role = :role, u.cinema = null WHERE u.id = :userId")
     void updateRoleAndClearCinema(@Param("userId") Long userId, @Param("role") Role role);
 }
-

@@ -13,10 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * MANAGER: Quản lý phim của rạp.
- * Manager chịu trách nhiệm thêm / sửa / xoá phim chiếu tại rạp mình.
- */
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/manager/movies")

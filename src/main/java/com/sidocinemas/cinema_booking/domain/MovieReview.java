@@ -9,13 +9,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(
-    name = "movie_reviews",
-    uniqueConstraints = @UniqueConstraint(
-        name = "uk_movie_review_customer",
-        columnNames = {"movie_id", "customer_id"}
-    )
-)
+@Table(name = "movie_reviews", uniqueConstraints = @UniqueConstraint(name = "uk_movie_review_customer", columnNames = {
+        "movie_id", "customer_id" }))
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
@@ -37,15 +32,9 @@ public class MovieReview {
     @JoinColumn(name = "customer_id", nullable = false)
     User customer;
 
-    /**
-     * Điểm đánh giá từ 1 đến 5 sao.
-     */
     @Column(nullable = false)
     int rating;
 
-    /**
-     * Nội dung bình luận (tuỳ chọn).
-     */
     @Column(columnDefinition = "TEXT")
     String content;
 

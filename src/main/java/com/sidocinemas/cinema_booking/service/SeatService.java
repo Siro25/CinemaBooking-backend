@@ -15,9 +15,7 @@ public interface SeatService {
 
     SeatResponse getSeatById(Long id);
 
-    /** Lấy tất cả ghế theo phòng */
     List<SeatResponse> getSeatsByRoom(Long roomId);
 
-    /** Lấy ghế kèm trạng thái available/booked cho một suất chiếu cụ thể */
     List<SeatResponse> getSeatsByShowtime(Long showtimeId);
 }

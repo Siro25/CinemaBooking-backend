@@ -265,7 +265,6 @@ public class BookingServiceImpl implements BookingService {
         };
     }
 
-    /** Sinh QR code giả — production thay bằng thư viện thực (ZXing,...) */
     private String generateQrCode() {
         return "QR-" + UUID.randomUUID().toString().toUpperCase().replace("-", "");
     }

@@ -16,10 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Customer Booking Controller - Chỉ cho customer
- * Endpoint: /api/v1/customer/bookings
- */
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/customer/bookings")
@@ -28,9 +24,6 @@ public class CustomerBookingController {
 
     private final BookingService bookingService;
 
-    /**
-     * Tạo đặt vé mới
-     */
     @PostMapping
     @PreAuthorize("hasRole('CUSTOMER')")
     @ResponseStatus(HttpStatus.CREATED)
@@ -43,10 +36,6 @@ public class CustomerBookingController {
                 .build();
     }
 
-    /**
-     * Huỷ booking của chính mình
-     * Kiểm tra booking thuộc về customer hiện tại trước khi huỷ
-     */
     @PatchMapping("/{id}/cancel")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ApiResponse<BookingResponse> cancelBooking(@PathVariable Long id) {
@@ -65,10 +54,6 @@ public class CustomerBookingController {
                 .build();
     }
 
-    /**
-     * Lấy chi tiết booking của mình
-     * Kiểm tra booking thuộc về customer hiện tại
-     */
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ApiResponse<BookingResponse> getBookingById(@PathVariable Long id) {
@@ -85,9 +70,6 @@ public class CustomerBookingController {
                 .build();
     }
 
-    /**
-     * Lịch sử đặt vé của mình
-     */
     @GetMapping
     @PreAuthorize("hasRole('CUSTOMER')")
     public ApiResponse<List<BookingResponse>> getMyBookings() {

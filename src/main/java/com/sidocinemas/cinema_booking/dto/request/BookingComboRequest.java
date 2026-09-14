@@ -7,10 +7,6 @@ import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
-/**
- * Request body khi customer gửi lên danh sách combo đã chọn.
- * Ví dụ: [{ comboItemId: 1, quantity: 2 }, { comboItemId: 3, quantity: 1 }]
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

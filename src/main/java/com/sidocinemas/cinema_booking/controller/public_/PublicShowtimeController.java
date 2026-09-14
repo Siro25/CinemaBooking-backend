@@ -9,10 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Public Showtime Controller - Không cần authentication
- * Endpoint: /api/v1/public/showtimes
- */
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/public/showtimes")
@@ -21,9 +17,6 @@ public class PublicShowtimeController {
 
     private final ShowtimeService showtimeService;
 
-    /**
-     * Lấy lịch chiếu theo movie ID (cho trang đặt vé)
-     */
     @GetMapping("/movie/{movieId}")
     public ApiResponse<List<ShowtimeResponse>> getShowtimesByMovie(@PathVariable Long movieId) {
         log.info("Public: Getting showtimes for movieId={}", movieId);
@@ -32,9 +25,6 @@ public class PublicShowtimeController {
                 .build();
     }
 
-    /**
-     * Xem chi tiết một showtime (số ghế trống, giá vé...)
-     */
     @GetMapping("/{id}")
     public ApiResponse<ShowtimeResponse> getShowtimeById(@PathVariable Long id) {
         log.info("Public: Getting showtime by id={}", id);

@@ -15,57 +15,50 @@ import java.util.List;
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-    // Lấy lịch sử đặt vé của customer
-    List<Booking> findByCustomerIdOrderByCreatedAtDesc(Long customerId);
+       List<Booking> findByCustomerIdOrderByCreatedAtDesc(Long customerId);
 
-    List<Booking> findByStatus(BookingStatus status);
+       List<Booking> findByStatus(BookingStatus status);
 
-    /**
-     * Lấy danh sách Booking HOLD đã hết hạn — dùng để lấy seat IDs trước khi giải phóng Redis.
-     * Sau khi có seat IDs, nên dùng bulkCancelExpiredHoldBookings() để cập nhật DB hiệu quả hơn.
-     */
-    @Query("SELECT b FROM Booking b JOIN FETCH b.tickets t JOIN FETCH t.seat " +
-           "WHERE b.status = :hold AND b.createdAt < :expirationTime")
-    List<Booking> findExpiredHoldBookings(@Param("expirationTime") LocalDateTime expirationTime,
-                                          @Param("hold") BookingStatus hold);
+       /*
+        * Lấy danh sách Booking HOLD đã hết hạn — dùng để lấy seat IDs trước khi giải
+        * phóng Redis
+        */
+       @Query("SELECT b FROM Booking b JOIN FETCH b.tickets t JOIN FETCH t.seat " +
+                     "WHERE b.status = :hold AND b.createdAt < :expirationTime")
+       List<Booking> findExpiredHoldBookings(@Param("expirationTime") LocalDateTime expirationTime,
+                     @Param("hold") BookingStatus hold);
 
-    /**
-     * Bulk UPDATE: Chuyển tất cả booking HOLD hết hạn → CANCELLED trong 1 câu SQL duy nhất.
-     * Hiệu quả hơn N lần save() trong vòng lặp.
-     */
-    @Modifying
-    @Query("UPDATE Booking b SET b.status = :cancelled " +
-           "WHERE b.status = :hold AND b.createdAt < :expirationTime")
-    int bulkCancelExpiredHoldBookings(@Param("expirationTime") LocalDateTime expirationTime,
-                                      @Param("hold") BookingStatus hold,
-                                      @Param("cancelled") BookingStatus cancelled);
+       // Bulk UPDATE: Chuyển tất cả booking HOLD hết hạn → CANCELLED
 
-    // Manager: lấy tất cả booking của một rạp (qua showtime → room → cinema)
-    @Query("SELECT b FROM Booking b " +
-           "JOIN b.showtime s JOIN s.room r JOIN r.cinema c " +
-           "WHERE c.id = :cinemaId " +
-           "ORDER BY b.createdAt DESC")
-    List<Booking> findByCinemaIdOrderByCreatedAtDesc(@Param("cinemaId") Long cinemaId);
+       @Modifying
+       @Query("UPDATE Booking b SET b.status = :cancelled " +
+                     "WHERE b.status = :hold AND b.createdAt < :expirationTime")
+       int bulkCancelExpiredHoldBookings(@Param("expirationTime") LocalDateTime expirationTime,
+                     @Param("hold") BookingStatus hold,
+                     @Param("cancelled") BookingStatus cancelled);
 
-    // Manager report: tổng doanh thu của rạp (chỉ CONFIRMED)
-    @Query("SELECT COALESCE(SUM(b.totalPrice), 0) FROM Booking b " +
-           "JOIN b.showtime s JOIN s.room r JOIN r.cinema c " +
-           "WHERE c.id = :cinemaId AND b.status = 'CONFIRMED'")
-    BigDecimal sumRevenueByCinema(@Param("cinemaId") Long cinemaId);
+       @Query("SELECT b FROM Booking b " +
+                     "JOIN b.showtime s JOIN s.room r JOIN r.cinema c " +
+                     "WHERE c.id = :cinemaId " +
+                     "ORDER BY b.createdAt DESC")
+       List<Booking> findByCinemaIdOrderByCreatedAtDesc(@Param("cinemaId") Long cinemaId);
 
-    // Manager report: doanh thu theo từng phim trong rạp
-    @Query("SELECT s.movie.title, COALESCE(SUM(b.totalPrice), 0), COUNT(b) " +
-           "FROM Booking b " +
-           "JOIN b.showtime s JOIN s.room r JOIN r.cinema c " +
-           "WHERE c.id = :cinemaId AND b.status = 'CONFIRMED' " +
-           "GROUP BY s.movie.title " +
-           "ORDER BY SUM(b.totalPrice) DESC")
-    List<Object[]> getRevenueByMovieForCinema(@Param("cinemaId") Long cinemaId);
+       @Query("SELECT COALESCE(SUM(b.totalPrice), 0) FROM Booking b " +
+                     "JOIN b.showtime s JOIN s.room r JOIN r.cinema c " +
+                     "WHERE c.id = :cinemaId AND b.status = 'CONFIRMED'")
+       BigDecimal sumRevenueByCinema(@Param("cinemaId") Long cinemaId);
 
-    // Admin report: tổng doanh thu toàn hệ thống (chỉ CONFIRMED)
-    @Query("SELECT COALESCE(SUM(b.totalPrice), 0) FROM Booking b WHERE b.status = 'CONFIRMED'")
-    BigDecimal sumTotalRevenue();
+       @Query("SELECT s.movie.title, COALESCE(SUM(b.totalPrice), 0), COUNT(b) " +
+                     "FROM Booking b " +
+                     "JOIN b.showtime s JOIN s.room r JOIN r.cinema c " +
+                     "WHERE c.id = :cinemaId AND b.status = 'CONFIRMED' " +
+                     "GROUP BY s.movie.title " +
+                     "ORDER BY SUM(b.totalPrice) DESC")
+       List<Object[]> getRevenueByMovieForCinema(@Param("cinemaId") Long cinemaId);
 
-    // Admin report: tổng số booking theo status
-    long countByStatus(BookingStatus status);
+       @Query("SELECT COALESCE(SUM(b.totalPrice), 0) FROM Booking b WHERE b.status = 'CONFIRMED'")
+       BigDecimal sumTotalRevenue();
+
+       // tổng số booking theo status
+       long countByStatus(BookingStatus status);
 }

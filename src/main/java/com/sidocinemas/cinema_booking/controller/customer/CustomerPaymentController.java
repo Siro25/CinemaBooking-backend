@@ -18,10 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Customer Payment Controller - Chỉ cho customer
- * Endpoint: /api/v1/customer/payments
- */
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/customer/payments")
@@ -31,10 +27,6 @@ public class CustomerPaymentController {
     private final PaymentService paymentService;
     private final BookingService bookingService;
 
-    /**
-     * Thanh toán cho booking
-     * Kiểm tra booking thuộc về customer hiện tại trước khi thanh toán
-     */
     @PostMapping
     @PreAuthorize("hasRole('CUSTOMER')")
     @ResponseStatus(HttpStatus.CREATED)
@@ -42,7 +34,6 @@ public class CustomerPaymentController {
         Long customerId = SecurityUtils.getCurrentUserId();
         log.info("[CUSTOMER] Processing payment for bookingId={}, customerId={}", request.getBookingId(), customerId);
 
-        // Kiểm tra booking thuộc về customer này
         BookingResponse booking = bookingService.getBookingById(request.getBookingId());
         if (!customerId.equals(booking.getCustomerId())) {
             throw new AppException(ErrorCode.ACCESS_DENIED);
@@ -57,10 +48,6 @@ public class CustomerPaymentController {
                 .build();
     }
 
-    /**
-     * Xác nhận thanh toán qua VietQR Sandbox
-     * Kiểm tra booking thuộc về customer hiện tại
-     */
     @PostMapping("/{bookingId}/confirm-vietqr")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ApiResponse<PaymentResponse> confirmVietQR(@PathVariable Long bookingId) {
@@ -88,9 +75,6 @@ public class CustomerPaymentController {
                 .build();
     }
 
-    /**
-     * Lịch sử thanh toán của mình (chỉ trả về payment của customer hiện tại)
-     */
     @GetMapping
     @PreAuthorize("hasRole('CUSTOMER')")
     public ApiResponse<List<PaymentResponse>> getMyPayments() {
@@ -101,9 +85,6 @@ public class CustomerPaymentController {
                 .build();
     }
 
-    /**
-     * Xem chi tiết thanh toán (chỉ của chính mình)
-     */
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ApiResponse<PaymentResponse> getPaymentById(@PathVariable Long id) {

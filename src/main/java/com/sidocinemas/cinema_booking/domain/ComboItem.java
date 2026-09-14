@@ -27,9 +27,6 @@ public class ComboItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    /**
-     * Rạp sở hữu combo này — Manager quản lý theo từng rạp.
-     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cinema_id", nullable = false)
     Cinema cinema;

@@ -9,11 +9,11 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RatingSummaryResponse {
-    
+
     Long movieId;
     Double averageRating;
     Long totalReviews;
-    
+
     @Builder.Default
-    long[] ratingCounts = new long[5]; // ratingCounts[0] = 1 sao, ..., ratingCounts[4] = 5 sao
+    long[] ratingCounts = new long[5];
 }
