@@ -44,7 +44,10 @@ services:
   # CONTAINER 3: BACKEND (SPRING BOOT / JAVA 21)
   # -------------------------------------------------------------------
   cinema-backend:
-    image: nillliudiu/cinema-backend:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cinema-backend:latest
     restart: always
     ports:
       - "8080:8080"
@@ -67,11 +70,11 @@ services:
         condition: service_healthy
     healthcheck:
       # Kiểm tra port 8080 đã mở chưa (Spring Boot đã khởi động xong)
-      test: [ "CMD-SHELL", "nc -z localhost 8080 || exit 1" ]
-      interval: 15s
-      timeout: 10s
-      retries: 8
-      start_period: 90s
+      test: [ "CMD-SHELL", "nc -z 127.0.0.1 8080 || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
     networks:
       - cinema-network
 
@@ -79,7 +82,10 @@ services:
   # CONTAINER 4: FRONTEND (REACT VITE + NGINX REVERSE PROXY)
   # -------------------------------------------------------------------
   cinema-frontend:
-    image: nillliudiu/cinema-frontend:latest
+    build:
+      context: ../1-cinema-booking-frontend
+      dockerfile: Dockerfile
+    image: cinema-frontend:latest
     restart: always
     ports:
       - "80:80"
