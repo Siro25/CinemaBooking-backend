@@ -9,8 +9,9 @@ services:
       POSTGRES_DB: cinema-booking
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: '123456'
-    ports:
-      - "5432:5432"
+    # ports bị ẩn để tránh conflict với Postgres local trên máy khách
+    # ports:
+    #   - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -28,8 +29,9 @@ services:
     image: redis:7-alpine
     restart: always
     command: redis-server --appendonly yes
-    ports:
-      - "6379:6379"
+    # ports bị ẩn để tránh conflict với Redis local trên máy khách
+    # ports:
+    #   - "6379:6379"
     volumes:
       - redis_data:/data
     healthcheck:
@@ -91,7 +93,7 @@ services:
       - "80:80"
     depends_on:
       cinema-backend:
-        condition: service_healthy
+        condition: service_started
     networks:
       - cinema-network
 
