@@ -5,6 +5,7 @@ import com.sidocinemas.cinema_booking.enums.MovieStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
@@ -12,7 +13,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MovieResponse {
+public class MovieResponse implements Serializable {
+    private static final long serialVersionUID = 1L;
     Long id;
     String title;
     String description;

@@ -12,10 +12,13 @@ import com.sidocinemas.cinema_booking.service.CinemaService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -28,6 +31,7 @@ public class CinemaServiceImpl implements CinemaService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "cinemas", allEntries = true)
     public CinemaResponse createCinema(CinemaRequest request) {
         Cinema cinema = Cinema.builder()
                 .name(request.getName())
@@ -40,6 +44,7 @@ public class CinemaServiceImpl implements CinemaService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "cinemas", allEntries = true)
     public CinemaResponse updateCinema(Long id, CinemaRequest request) {
         Cinema cinema = cinemaRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CINEMA_NOT_FOUND));
@@ -53,6 +58,7 @@ public class CinemaServiceImpl implements CinemaService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "cinemas", allEntries = true)
     public void deleteCinema(Long id) {
         if (!cinemaRepository.existsById(id)) {
             throw new AppException(ErrorCode.CINEMA_NOT_FOUND);
@@ -61,6 +67,7 @@ public class CinemaServiceImpl implements CinemaService {
     }
 
     @Override
+    @Cacheable(value = "cinemas", key = "#id")
     public CinemaResponse getCinemaById(Long id) {
         Cinema cinema = cinemaRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CINEMA_NOT_FOUND));
@@ -68,10 +75,11 @@ public class CinemaServiceImpl implements CinemaService {
     }
 
     @Override
+    @Cacheable(value = "cinemas", key = "'all'")
     public List<CinemaResponse> getAllCinemas() {
         return cinemaRepository.findAll().stream()
                 .map(this::mapToResponse)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     private CinemaResponse mapToResponse(Cinema cinema) {

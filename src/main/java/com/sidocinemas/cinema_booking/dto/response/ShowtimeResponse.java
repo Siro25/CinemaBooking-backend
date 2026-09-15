@@ -3,6 +3,7 @@ package com.sidocinemas.cinema_booking.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -11,7 +12,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ShowtimeResponse {
+public class ShowtimeResponse implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     Long id;
 

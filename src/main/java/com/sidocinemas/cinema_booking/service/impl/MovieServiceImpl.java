@@ -9,10 +9,13 @@ import com.sidocinemas.cinema_booking.exception.ErrorCode;
 import com.sidocinemas.cinema_booking.repository.MovieRepository;
 import com.sidocinemas.cinema_booking.service.MovieService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -23,6 +26,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "movies", allEntries = true)
     public MovieResponse createMovie(MovieRequest request) {
         Movie movie = Movie.builder()
                 .title(request.getTitle())
@@ -40,6 +44,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "movies", allEntries = true)
     public MovieResponse updateMovie(Long id, MovieRequest request) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_FOUND));
@@ -61,6 +66,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "movies", key = "#id")
     public MovieResponse getMovieById(Long id) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.MOVIE_NOT_FOUND));
@@ -69,14 +75,16 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "movies", key = "'all'")
     public List<MovieResponse> getAllMovies() {
         return movieRepository.findAll().stream()
                 .map(this::mapToResponse)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
+    @CacheEvict(value = "movies", allEntries = true)
     public void deleteMovie(Long id) {
         if (!movieRepository.existsById(id)) {
             throw new AppException(ErrorCode.MOVIE_NOT_FOUND);

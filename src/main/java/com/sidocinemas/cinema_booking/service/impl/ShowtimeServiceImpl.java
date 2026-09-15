@@ -15,10 +15,13 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -32,6 +35,7 @@ public class ShowtimeServiceImpl implements ShowtimeService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "showtimes", allEntries = true)
     public ShowtimeResponse createShowtime(ShowtimeRequest request) {
         validateTimeRange(request);
 
@@ -59,6 +63,7 @@ public class ShowtimeServiceImpl implements ShowtimeService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "showtimes", allEntries = true)
     public ShowtimeResponse updateShowtime(Long id, ShowtimeRequest request) {
         validateTimeRange(request);
 
@@ -87,6 +92,7 @@ public class ShowtimeServiceImpl implements ShowtimeService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "showtimes", allEntries = true)
     public void deleteShowtime(Long id) {
         if (!showtimeRepository.existsById(id)) {
             throw new AppException(ErrorCode.SHOWTIME_NOT_FOUND);
@@ -97,6 +103,7 @@ public class ShowtimeServiceImpl implements ShowtimeService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "showtimes", key = "#id")
     public ShowtimeResponse getShowtimeById(Long id) {
         Showtime showtime = showtimeRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.SHOWTIME_NOT_FOUND));
@@ -105,32 +112,35 @@ public class ShowtimeServiceImpl implements ShowtimeService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "showtimes", key = "'movie:' + #movieId")
     public List<ShowtimeResponse> getShowtimesByMovie(Long movieId) {
         if (!movieRepository.existsById(movieId)) {
             throw new AppException(ErrorCode.MOVIE_NOT_FOUND);
         }
         return showtimeRepository.findByMovieId(movieId).stream()
                 .map(this::mapToResponse)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "showtimes", key = "'room:' + #roomId")
     public List<ShowtimeResponse> getShowtimesByRoom(Long roomId) {
         if (!roomRepository.existsById(roomId)) {
             throw new AppException(ErrorCode.ROOM_NOT_FOUND);
         }
         return showtimeRepository.findByRoomId(roomId).stream()
                 .map(this::mapToResponse)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "showtimes", key = "'all'")
     public List<ShowtimeResponse> getAllShowtimes() {
         return showtimeRepository.findAll().stream()
                 .map(this::mapToResponse)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     // ── Helpers ──────────────────────────────────────────────────────────────
