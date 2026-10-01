@@ -3,6 +3,8 @@
 Dự án này bao gồm một hệ thống đặt vé xem phim hoàn chỉnh với Frontend (React), Backend (Spring Boot), Database (PostgreSQL) và Cache (Redis).
 
 ## 🚀 Hướng dẫn khởi chạy nhanh (Dành cho Khách hàng / Người xem)
+Truy cập link deploy: https://cinema-booking-frontend-rose.vercel.app/
+Hoặc sử dụng docker theo các bước dưới đây:
 
 ### Yêu cầu hệ thống:
 1. Đã cài đặt **Docker** và **Docker Compose**.
