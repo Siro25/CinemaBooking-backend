@@ -61,8 +61,8 @@ services:
       DB_PASSWORD: '123456'
       REDIS_HOST: redis-cache
       REDIS_PORT: 6379
-      # Đảm bảo data.sql được chạy khi khởi động
-      SPRING_SQL_INIT_MODE: always
+      # Chỉ bật seed cho database thử nghiệm: data.sql xóa dữ liệu hiện có.
+      SPRING_SQL_INIT_MODE: ${SPRING_SQL_INIT_MODE:-never}
       # JVM options: giảm bộ nhớ tối đa, thêm DNS TTL ngắn cho Docker
       JAVA_OPTS: "-XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/./urandom"
     depends_on:
@@ -71,8 +71,8 @@ services:
       redis-cache:
         condition: service_healthy
     healthcheck:
-      # Kiểm tra port 8080 đã mở chưa (Spring Boot đã khởi động xong)
-      test: [ "CMD-SHELL", "wget -q --spider http://localhost:8080/api/public/movies || exit 1" ]
+      # Kiểm tra public API thực tế, bao gồm kết nối cơ sở dữ liệu
+      test: [ "CMD-SHELL", "wget -q -O /dev/null http://localhost:8080/api/v1/public/movies || exit 1" ]
       interval: 5s
       timeout: 5s
       retries: 20

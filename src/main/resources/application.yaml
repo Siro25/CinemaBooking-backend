@@ -12,7 +12,8 @@ spring:
     driver-class-name: org.postgresql.Driver
   sql:
     init:
-      mode: always
+      # data.sql resets all booking data; only enable explicitly for disposable seed databases.
+      mode: ${SPRING_SQL_INIT_MODE:never}
   jpa:
     hibernate:
       ddl-auto: update
@@ -29,8 +30,8 @@ spring:
       # host: ${REDIS_HOST:localhost}
       # port: ${REDIS_PORT:6379}
       url: ${REDIS_URL}
-      timeout: 2000ms
-      connect-timeout: 2000ms
+      timeout: ${REDIS_TIMEOUT:5s}
+      connect-timeout: ${REDIS_CONNECT_TIMEOUT:10s}
 
 seat-hold:
   ttl-minutes: 10
